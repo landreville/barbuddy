@@ -1,0 +1,120 @@
+<template>
+  <div>
+    <v-list two-line>
+      <template
+        v-for="(item, index) in recipes"
+        :item="item">
+
+        <v-list-tile class="list-tile" avatar :index="index" :key="item.name">
+
+          <!-- TODO: Change to square image -->
+          <v-list-tile-avatar>
+            <img src="/static/photos/cocktails/cocktail.jpg">
+          </v-list-tile-avatar>
+
+          <v-list-tile-content>
+            <v-list-tile-title>
+              <router-link :to="{name: 'recipe', params: { id: item.id }}">
+                {{ item.name }}
+              </router-link>
+            </v-list-tile-title>
+            <v-list-tile-sub-title>{{ item.description }}</v-list-tile-sub-title>
+          </v-list-tile-content>
+
+        </v-list-tile>
+        <v-divider :key="index"></v-divider>
+      </template>
+    </v-list>
+  </div>
+</template>
+
+<style scoped>
+
+</style>
+
+<script>
+import axios from 'axios';
+
+export default {
+  name: 'recipes',
+  created() {
+    this.fetchInitialRecipes();
+  },
+  mounted() {
+    this.addFetchScrollListener();
+  },
+  data() {
+    return {
+      recipes: [],
+      lastkey: null,
+      recipesUrl: 'http://172.17.0.2:5984/peacock/_design/peacock/_view/recipes-by-catalog-name',
+      limit: 25,
+      fetching: null
+    };
+  },
+  methods: {
+    addFetchScrollListener() {
+      document.addEventListener('scroll', () => {
+        if (this.fetching) {
+          return;
+        }
+        const offsetHeight = document.documentElement.offsetHeight;
+        const windowHeight = window.innerHeight;
+        const scrollPos = (
+          window.scrollY
+          || window.pageYOffset
+          || document.body.scrollTop
+          + ((document.documentElement && document.documentElement.scrollTop) || 0)
+        );
+        if (windowHeight + scrollPos >= offsetHeight * 0.75) {
+          this.fetchMoreRecipes();
+        }
+      });
+    },
+    fetchInitialRecipes() {
+      this.fetching = axios.get(
+        this.recipesUrl,
+        { params: { limit: this.limit } }
+      ).then((response) => {
+        this.saveLastKey(response);
+        this.fetching = null;
+        this.recipes = response.data.rows.map(el => this.parseItem(el));
+      });
+    },
+    fetchMoreRecipes(event) {
+      if (event) {
+        event.preventDefault();
+      }
+      if (this.fetching) {
+        return;
+      }
+
+      const params = { limit: this.limit, startkey: this.lastkey, skip: 1 };
+      this.fetching = axios.get(this.recipesUrl, { params }).then((response) => {
+        this.saveLastKey(response);
+        this.fetching = null;
+        response.data.rows.map(el => this.recipes.push(this.parseItem(el)));
+      });
+    },
+    parseItem(item) {
+      /*
+      "rows": [
+        {"id":"63c671878f27c53dad6aaae5ef00fdd5",
+        "key":[null,"Alexander"],
+        "value":{"name":"","description":"","vessel":""}}
+      ]
+       */
+      const recipe = item.value;
+      recipe.id = item.id;
+      return recipe;
+    },
+    saveLastKey(response) {
+      if (response.data && response.data.rows && response.data.rows.length > 0) {
+        this.lastkey = JSON.stringify(
+          response.data.rows[response.data.rows.length - 1].key
+        );
+      }
+    }
+  },
+};
+</script>

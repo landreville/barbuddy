@@ -1,0 +1,24 @@
+{
+  "_id": "_design/peacock",
+  "_rev": "6-f20a10ee8cc248fc2fcab9246632caa4",
+  "language": "javascript",
+  "validate_doc_update": "function(newDoc, oldDoc, userCtx) { if (userCtx.roles.indexOf('_admin') === -1) {       throw({forbidden: 'Permission denied.'});   } }",
+  "views": {
+    "recipes-by-catalog-name": {
+      "map": "function (doc) {\n  if (doc.type === 'recipe' && doc.approved) {\n    var emitDoc = {\n      'name': doc.name,\n      'catalog': doc.catalog,\n      'description': doc.description,\n      'vessel': doc.vessel\n    };\n    emit([doc.catalog, doc.name], emitDoc);\n  }\n};"
+    },
+    "recipes-by-name": {
+      "map": "function (doc) {\n  if (doc.type === 'recipe' && doc.approved) {\n    var emitDoc = {\n      'name': doc.name,\n      'catalog': doc.catalog,\n      'description': doc.description,\n      'vessel': doc.vessel\n    };\n    emit(doc.name, emitDoc);\n  }\n};"
+    },
+    "recipes-by-catalog": {
+      "map": "function (doc) {\n  if (doc.type === 'recipe' && doc.approved) {\n    var emitDoc = {\n      'name': doc.name,\n      'catalog': doc.catalog,\n      'description': doc.description,\n      'vessel': doc.vessel\n    };\n    emit(doc.catalog, emitDoc);\n  }\n};"
+    },
+    "recipes-by-ingredient": {
+      "map": "function (doc) {\n  if (doc.type === 'recipe' && doc.approved && doc.ingredients) {\n    var ingredients = doc.ingredients;\n    var emitDoc = {\n      'name': doc.name,\n      'catalog': doc.catalog,\n      'description': doc.description,\n      'vessel': doc.vessel\n    };\n\n    for (var i = 0; i < ingredients.length; i++) {\n      var ingredient = ingredients[i];\n      if (ingredient.name) {\n        emit(ingredient.name, emitDoc);\n      }\n\n      if (ingredient.alternatives) {\n        var alts = ingredient.alternatives;\n        for (var j = 0; j < alts.length; j++) {\n          var alt = alts[j];\n          if (alt.name) {\n            emit(alt.name, emitDoc);\n          }\n        }\n      }\n    }\n  }\n};\n"
+    },
+    "ingredients": {
+      "map": "function (doc) {\n  if (doc.type === 'recipe' && doc.approved) {\n    var ingredients = doc.ingredients;\n\n    for (var i = 0; i < ingredients.length; i++) {\n      var ingredient = ingredients[i];\n\n      emit(ingredient.name, null);\n\n      if (ingredient.alternatives) {\n        var alts = ingredient.alternatives;\n        for (var j = 0; j < alts.length; j++) {\n          var alt = alts[j];\n          emit(alt.name, null);\n        }\n      }\n    }\n  }\n};\n",
+      "reduce": "function(keys, values) { return true; } "
+    }
+  }
+}
