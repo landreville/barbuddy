@@ -1,12 +1,6 @@
 defmodule BarchefWeb.AdminCatalogController do
   use BarchefWeb, :controller
 
-  @view_map %{
-    "all" => "all-recipes-by-name",
-    "active" => "recipes-by-name",
-    "unpublished" => "unpublished-recipes-by-name"
-  }
-
   def catalogs(conn, _params) do
     case fetch("all-catalogs", %{"group" => "true"}) do
       {:ok, data} ->

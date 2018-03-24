@@ -21,5 +21,7 @@ defmodule BarchefWeb.Router do
     get "/admin/catalogs/:catalog/recipes", AdminCatalogController, :catalogs_recipes
     get "/admin/recipes", AdminRecipeController, :recipes
     get "/admin/recipes/:view", AdminRecipeController, :recipes_view
+    get "/admin/ingredients", AdminIngredientController, :ingredients
+    get "/admin/ingredients/:view", BarchefWeb.AdminIngredientController, :ingredients_view
   end
 end

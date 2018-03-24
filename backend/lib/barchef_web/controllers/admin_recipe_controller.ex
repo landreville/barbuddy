@@ -17,12 +17,9 @@ defmodule BarchefWeb.AdminRecipeController do
   def recipes(conn, params) do
     case params do
       %{"ingredients" => ingredients} ->
-        case fetch_by_ingredients(conn, "all", Jason.decode!(ingredients)) do
-          {:ok, data} ->
-            json conn, %{"data" => data}
-          {:error, _message} ->
-            conn
-            |> put_status(:not_found)
+        case fetch_by_ingredients("all", Jason.decode!(ingredients)) do
+          {:ok, data} -> json conn, %{"data" => data}
+          {:error, _message} -> conn |> put_status(:not_found)
         end
       _ -> fetch_recipes(conn, "name", "all")
     end
@@ -33,7 +30,7 @@ defmodule BarchefWeb.AdminRecipeController do
     fetch_recipes(conn, "name", view)
   end
 
-  defp fetch_by_ingredients(conn, view, ingredients) do
+  defp fetch_by_ingredients(view, ingredients) do
     case view_path("ingredients", view) do
       {:ok, path} ->
         {
