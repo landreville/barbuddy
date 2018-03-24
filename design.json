@@ -1,23 +1,59 @@
 {
   "_id": "_design/peacock",
-  "_rev": "6-f20a10ee8cc248fc2fcab9246632caa4",
+  "_rev": "13-95aa6502b7f48942886de264570573ff",
   "language": "javascript",
   "validate_doc_update": "function(newDoc, oldDoc, userCtx) { if (userCtx.roles.indexOf('_admin') === -1) {       throw({forbidden: 'Permission denied.'});   } }",
   "views": {
-    "recipes-by-catalog-name": {
-      "map": "function (doc) {\n  if (doc.type === 'recipe' && doc.approved) {\n    var emitDoc = {\n      'name': doc.name,\n      'catalog': doc.catalog,\n      'description': doc.description,\n      'vessel': doc.vessel\n    };\n    emit([doc.catalog, doc.name], emitDoc);\n  }\n};"
+    "catalogs": {
+      "map": "function (doc) {\n  if (doc.type == 'recipe' && doc.active) {\n    if (doc.catalog) {\n      emit(doc.catalog, null);\n    }\n  }\n};",
+      "reduce": "function(keys, values) { return true; }"
+    },
+    "all-catalogs": {
+      "map": "function (doc) {\n  if (doc.type == 'recipe') {\n    if (doc.catalog) {\n      emit(doc.catalog, null);\n    }\n  }\n};",
+      "reduce": "function(keys, values) { return true; }"
+    },
+    "recipes-by-id": {
+      "map": "function (doc) {\n  if (doc.type === 'recipe' && doc.active) {\n    emit(doc._id, doc);\n  }\n};"
     },
     "recipes-by-name": {
-      "map": "function (doc) {\n  if (doc.type === 'recipe' && doc.approved) {\n    var emitDoc = {\n      'name': doc.name,\n      'catalog': doc.catalog,\n      'description': doc.description,\n      'vessel': doc.vessel\n    };\n    emit(doc.name, emitDoc);\n  }\n};"
+      "map": "function (doc) {\n  if (doc.type === 'recipe' && doc.active) {\n    var emitDoc = {\n      'name': doc.name,\n      'catalog': doc.catalog,\n      'description': doc.description,\n      'vessel': doc.vessel\n    };\n    emit(doc.name, emitDoc);\n  }\n};"
     },
     "recipes-by-catalog": {
-      "map": "function (doc) {\n  if (doc.type === 'recipe' && doc.approved) {\n    var emitDoc = {\n      'name': doc.name,\n      'catalog': doc.catalog,\n      'description': doc.description,\n      'vessel': doc.vessel\n    };\n    emit(doc.catalog, emitDoc);\n  }\n};"
+      "map": "function (doc) {\n  if (doc.type === 'recipe' && doc.active) {\n    var emitDoc = {\n      'name': doc.name,\n      'catalog': doc.catalog,\n      'description': doc.description,\n      'vessel': doc.vessel\n    };\n    emit(doc.catalog, emitDoc);\n  }\n};"
     },
     "recipes-by-ingredient": {
-      "map": "function (doc) {\n  if (doc.type === 'recipe' && doc.approved && doc.ingredients) {\n    var ingredients = doc.ingredients;\n    var emitDoc = {\n      'name': doc.name,\n      'catalog': doc.catalog,\n      'description': doc.description,\n      'vessel': doc.vessel\n    };\n\n    for (var i = 0; i < ingredients.length; i++) {\n      var ingredient = ingredients[i];\n      if (ingredient.name) {\n        emit(ingredient.name, emitDoc);\n      }\n\n      if (ingredient.alternatives) {\n        var alts = ingredient.alternatives;\n        for (var j = 0; j < alts.length; j++) {\n          var alt = alts[j];\n          if (alt.name) {\n            emit(alt.name, emitDoc);\n          }\n        }\n      }\n    }\n  }\n};\n"
+      "map": "function (doc) {\n  if (doc.type === 'recipe' && doc.active && doc.ingredients) {\n    var ingredients = doc.ingredients;\n    var emitDoc = {\n      'name': doc.name,\n      'catalog': doc.catalog,\n      'description': doc.description,\n      'vessel': doc.vessel\n    };\n\n    for (var i = 0; i < ingredients.length; i++) {\n      var ingredient = ingredients[i];\n      if (ingredient.name) {\n        emit(ingredient.name, emitDoc);\n      }\n      if (ingredient.category){\n        emit(ingredient.category, emitDoc);\n      }\n\n      if (ingredient.alternatives) {\n        var alts = ingredient.alternatives;\n        for (var j = 0; j < alts.length; j++) {\n          var alt = alts[j];\n          if (alt.name) {\n            emit(alt.name, emitDoc);\n          }\n          if (alt.category) {\n            emit(alt.category, emitDoc);\n          }\n        }\n      }\n    }\n  }\n};"
     },
     "ingredients": {
-      "map": "function (doc) {\n  if (doc.type === 'recipe' && doc.approved) {\n    var ingredients = doc.ingredients;\n\n    for (var i = 0; i < ingredients.length; i++) {\n      var ingredient = ingredients[i];\n\n      emit(ingredient.name, null);\n\n      if (ingredient.alternatives) {\n        var alts = ingredient.alternatives;\n        for (var j = 0; j < alts.length; j++) {\n          var alt = alts[j];\n          emit(alt.name, null);\n        }\n      }\n    }\n  }\n};\n",
+      "map": "function (doc) {\n  if (doc.type === 'recipe' && doc.active) {\n    var ingredients = doc.ingredients;\n\n    for (var i = 0; i < ingredients.length; i++) {\n      var ingredient = ingredients[i];\n\n      emit(ingredient.name, {\"name\": ingredient.name, \"category\": ingredient.category});\n      if (ingredient.category){\n        emit(ingredient.category, {\"name\": ingredient.category, \"category\": ingredient.category});\n      }\n\n      if (ingredient.alternatives) {\n        var alts = ingredient.alternatives;\n        for (var j = 0; j < alts.length; j++) {\n          var alt = alts[j];\n          emit(alt.name, {\"name\": alt.name, \"category\": alt.category});\n          if (alt.category){\n            emit(alt.category, {\"name\": alt.category, \"category\": alt.category});\n          }\n        }\n      }\n    }\n  }\n};",
+      "reduce": "function(keys, values) { return true; } "
+    },
+    "unpublished-recipes-by-id": {
+      "map": "function (doc) {\n  if (doc.type === 'recipe' && !doc.active) {\n    emit(doc._id, doc);\n  }\n};"
+    },
+    "unpublished-recipes-by-name": {
+      "map": "function (doc) {\n  if (doc.type === 'recipe' && !doc.active) {\n    var emitDoc = {\n      'name': doc.name,\n      'catalog': doc.catalog,\n      'description': doc.description,\n      'vessel': doc.vessel\n    };\n    emit(doc.name, emitDoc);\n  }\n};"
+    },
+    "unpublished-recipes-by-catalog": {
+      "map": "function (doc) {\n  if (doc.type === 'recipe' && !doc.active) {\n    var emitDoc = {\n      'name': doc.name,\n      'catalog': doc.catalog,\n      'description': doc.description,\n      'vessel': doc.vessel\n    };\n    emit(doc.catalog, emitDoc);\n  }\n};"
+    },
+    "unpublished-recipes-by-ingredient": {
+      "map": "function (doc) {\n  if (doc.type === 'recipe' && !doc.active && doc.ingredients) {\n    var ingredients = doc.ingredients;\n    var emitDoc = {\n      'name': doc.name,\n      'catalog': doc.catalog,\n      'description': doc.description,\n      'vessel': doc.vessel\n    };\n\n    for (var i = 0; i < ingredients.length; i++) {\n      var ingredient = ingredients[i];\n      if (ingredient.name) {\n        emit(ingredient.name, emitDoc);\n      }\n      if (ingredient.category){\n        emit(ingredient.category, emitDoc);\n      }\n\n      if (ingredient.alternatives) {\n        var alts = ingredient.alternatives;\n        for (var j = 0; j < alts.length; j++) {\n          var alt = alts[j];\n          if (alt.name) {\n            emit(alt.name, emitDoc);\n          }\n          if (alt.category) {\n            emit(alt.category, emitDoc);\n          }\n        }\n      }\n    }\n  }\n};"
+    },
+    "all-recipes-by-id": {
+      "map": "function (doc) {\n  if (doc.type === 'recipe') {\n    emit(doc._id, doc);\n  }\n};"
+    },
+    "all-recipes-by-name": {
+      "map": "function (doc) {\n  if (doc.type === 'recipe') {\n    var emitDoc = {\n  'active': doc.active,    'name': doc.name,\n      'catalog': doc.catalog,\n      'description': doc.description,\n      'vessel': doc.vessel\n    };\n    emit(doc.name, emitDoc);\n  }\n};"
+    },
+    "all-recipes-by-catalog": {
+      "map": "function (doc) {\n  if (doc.type === 'recipe') {\n    var emitDoc = {\n  'active': doc.active,    'name': doc.name,\n      'catalog': doc.catalog,\n      'description': doc.description,\n      'vessel': doc.vessel\n    };\n    emit(doc.catalog, emitDoc);\n  }\n};"
+    },
+    "all-recipes-by-ingredient": {
+      "map": "function (doc) {\n  if (doc.type === 'recipe' && doc.ingredients) {\n    var ingredients = doc.ingredients;\n    var emitDoc = {\n     'active': doc.active, 'name': doc.name,\n      'catalog': doc.catalog,\n      'description': doc.description,\n      'vessel': doc.vessel\n    };\n\n    for (var i = 0; i < ingredients.length; i++) {\n      var ingredient = ingredients[i];\n      if (ingredient.name) {\n        emit(ingredient.name, emitDoc);\n      }\n      if (ingredient.category){\n        emit(ingredient.category, emitDoc);\n      }\n\n      if (ingredient.alternatives) {\n        var alts = ingredient.alternatives;\n        for (var j = 0; j < alts.length; j++) {\n          var alt = alts[j];\n          if (alt.name) {\n            emit(alt.name, emitDoc);\n          }\n          if (alt.category) {\n            emit(alt.category, emitDoc);\n          }\n        }\n      }\n    }\n  }\n};"
+    },
+    "all-ingredients": {
+      "map": "function (doc) {\n  if (doc.type === 'recipe') {\n    var ingredients = doc.ingredients;\n\n    for (var i = 0; i < ingredients.length; i++) {\n      var ingredient = ingredients[i];\n\n      emit(ingredient.name, {\"name\": ingredient.name, \"category\": ingredient.category});\n      if (ingredient.category){\n        emit(ingredient.category, {\"name\": ingredient.category, \"category\": ingredient.category});\n      }\n\n      if (ingredient.alternatives) {\n        var alts = ingredient.alternatives;\n        for (var j = 0; j < alts.length; j++) {\n          var alt = alts[j];\n          emit(alt.name, {\"name\": alt.name, \"category\": alt.category});\n          if (alt.category){\n            emit(alt.category, {\"name\": alt.category, \"category\": alt.category});\n          }\n        }\n      }\n    }\n  }\n};",
       "reduce": "function(keys, values) { return true; } "
     }
   }
