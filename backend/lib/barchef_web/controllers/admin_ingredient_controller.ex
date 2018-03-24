@@ -10,7 +10,7 @@ defmodule BarchefWeb.AdminIngredientController do
     fetch_ingredients(conn, @view_map["all"])
   end
 
-  def ingredients(conn, %{"view" => view}) do
+  def ingredients_view(conn, %{"view" => view}) do
     case @view_map do
       %{^view => path} -> fetch_ingredients(conn, path)
       _ -> conn |> put_status(:not_found)
@@ -20,7 +20,7 @@ defmodule BarchefWeb.AdminIngredientController do
   defp fetch_ingredients(conn, path) do
     case fetch(path, %{"group" => "true"}) do
       {:ok, data} ->
-        json conn, %{"data" => Enum.map(data, &(&1["key"]))}
+        json conn, %{"data" => data}
       {:error, message} ->
         Logger.warn "Error: " <> message
         conn |> put_status(500)

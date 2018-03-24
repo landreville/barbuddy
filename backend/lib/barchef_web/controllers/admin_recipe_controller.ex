@@ -11,8 +11,15 @@ defmodule BarchefWeb.AdminRecipeController do
       "all" => "all-recipes-by-ingredient",
       "active" => "recipes-by-ingredient",
       "unpublished" => "unpublished-recipes-by-ingredient"
+    },
+    "id" => %{
+      "all" => "all-recipes-by-id"
     }
   }
+
+  def recipe(conn, %{"id" => id}) do
+    fetch_recipes(conn, "id", "all", %{"key" => Jason.encode!(id)}, &(Enum.at(&1, 0)))
+  end
 
   def recipes(conn, params) do
     case params do
@@ -26,7 +33,7 @@ defmodule BarchefWeb.AdminRecipeController do
 
   end
 
-  def recipes(conn, %{"view" => view}) do
+  def recipes_view(conn, %{"view" => view}) do
     fetch_recipes(conn, "name", view)
   end
 
@@ -74,10 +81,10 @@ defmodule BarchefWeb.AdminRecipeController do
     for r <- recipes, do: r["id"]
   end
 
-  defp fetch_recipes(conn, category, view) do
+  defp fetch_recipes(conn, category, view, params \\ [], data_fn \\ &(&1)) do
     case view_path(category, view) do
       {:ok, path} ->
-        render_fetch(conn, path)
+        render_fetch(conn, path, params, &(data_fn.(&1)))
       {:error, _message} ->
         conn
         |> put_status(:not_found)

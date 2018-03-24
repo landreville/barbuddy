@@ -18,10 +18,11 @@ defmodule BarchefWeb.Router do
   scope "/api", BarchefWeb do
     pipe_through :api
     get "/admin/catalogs", AdminCatalogController, :catalogs
-    get "/admin/catalogs/:catalog/recipes", AdminCatalogController, :catalogs
+    get "/admin/catalogs/:catalog/recipes", AdminCatalogController, :catalogs_recipes
     get "/admin/recipes", AdminRecipeController, :recipes
-    get "/admin/recipes/:view", AdminRecipeController, :recipes
+    get "/admin/recipes/:view", AdminRecipeController, :recipes_view
+    get "/admin/recipe/:id", AdminRecipeController, :recipe
     get "/admin/ingredients", AdminIngredientController, :ingredients
-    get "/admin/ingredients/:view", AdminIngredientController, :ingredients
+    get "/admin/ingredients/:view", AdminIngredientController, :ingredients_view
   end
 end

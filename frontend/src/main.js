@@ -6,7 +6,7 @@ import Vuetify from 'vuetify';
 import 'vuetify/dist/vuetify.min.css';
 import BarchefApp from './App';
 import router from './router';
-
+import './assets/css/main.styl';
 
 Vue.config.productionTip = false;
 

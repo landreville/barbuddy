@@ -47,7 +47,7 @@ export default {
     return {
       recipes: [],
       lastkey: null,
-      recipesUrl: 'http://172.17.0.2:5984/peacock/_design/peacock/_view/recipes-by-catalog-name',
+      recipesUrl: 'http://localhost:4000/api/admin/recipes',
       limit: 25,
       fetching: null
     };
@@ -78,7 +78,7 @@ export default {
       ).then((response) => {
         this.saveLastKey(response);
         this.fetching = null;
-        this.recipes = response.data.rows.map(el => this.parseItem(el));
+        this.recipes = response.data.data;
       });
     },
     fetchMoreRecipes(event) {
@@ -93,20 +93,8 @@ export default {
       this.fetching = axios.get(this.recipesUrl, { params }).then((response) => {
         this.saveLastKey(response);
         this.fetching = null;
-        response.data.rows.map(el => this.recipes.push(this.parseItem(el)));
+        response.data.rows.map(el => this.recipes.push(el));
       });
-    },
-    parseItem(item) {
-      /*
-      "rows": [
-        {"id":"63c671878f27c53dad6aaae5ef00fdd5",
-        "key":[null,"Alexander"],
-        "value":{"name":"","description":"","vessel":""}}
-      ]
-       */
-      const recipe = item.value;
-      recipe.id = item.id;
-      return recipe;
     },
     saveLastKey(response) {
       if (response.data && response.data.rows && response.data.rows.length > 0) {

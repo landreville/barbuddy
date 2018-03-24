@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import recipes from '@/components/recipes';
 import recipe from '@/components/recipe';
+import editrecipe from '@/components/editrecipe';
 
 Vue.use(Router);
 
@@ -16,6 +17,12 @@ export default new Router({
       path: '/recipes/:id',
       name: 'recipe',
       component: recipe,
+      props: { default: true }
+    },
+    {
+      path: '/recipes/:id/edit',
+      name: 'editrecipe',
+      component: editrecipe,
       props: { default: true }
     }
   ],

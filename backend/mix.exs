@@ -19,7 +19,7 @@ defmodule Barchef.Mixfile do
   def application do
     [
       mod: {Barchef.Application, []},
-      extra_applications: [:logger, :runtime_tools, :httpoison]
+      extra_applications: [:corsica, :logger, :runtime_tools, :httpoison]
     ]
   end
 
@@ -39,7 +39,9 @@ defmodule Barchef.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:jason, "~> 1.0"},
-      {:httpoison, "~> 1.0"}
+      {:httpoison, "~> 1.0"},
+      {:plug, "~> 1.0"},
+      {:corsica, "~> 1.0"}
     ]
   end
 end

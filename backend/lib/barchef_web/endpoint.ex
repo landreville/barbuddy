@@ -18,6 +18,7 @@ defmodule BarchefWeb.Endpoint do
   end
 
   plug Plug.Logger
+  plug Corsica, origins: "*"
 
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],

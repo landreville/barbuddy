@@ -11,7 +11,7 @@ defmodule BarchefWeb.AdminCatalogController do
     end
   end
 
-  def catalogs(conn, %{"catalog" => catalog}) do
+  def catalogs_recipes(conn, %{"catalog" => catalog}) do
     json conn,
          %{
            "data" => fetch(

@@ -349,7 +349,7 @@
         {
           "name": "Mint",
           "amount": 2,
-          "unit": "leaves",
+          "unit": "leaf",
           "garnish": true
         }
       ]
@@ -675,7 +675,7 @@
         {
           "name": "Angostura Bitters",
           "amount": 4,
-          "unit": "dashes"
+          "unit": "dash"
         }
       ]
     },
