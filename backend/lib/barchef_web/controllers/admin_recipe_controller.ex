@@ -26,7 +26,7 @@ defmodule BarchefWeb.AdminRecipeController do
 
   end
 
-  def recipes_view(conn, %{"view" => view}) do
+  def recipes(conn, %{"view" => view}) do
     fetch_recipes(conn, "name", view)
   end
 

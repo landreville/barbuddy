@@ -10,7 +10,7 @@ defmodule BarchefWeb.AdminIngredientController do
     fetch_ingredients(conn, @view_map["all"])
   end
 
-  def ingredients_view(conn, %{"view" => view}) do
+  def ingredients(conn, %{"view" => view}) do
     case @view_map do
       %{^view => path} -> fetch_ingredients(conn, path)
       _ -> conn |> put_status(:not_found)
