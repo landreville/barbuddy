@@ -49,6 +49,7 @@ module.exports = {
     'comma-dangle': 'off',
     'no-plusplus': 'off',
     'no-console': 'off',
-    'prefer-const': 'off'
+    'prefer-const': 'off',
+    'no-underscore-dangle': 'off'
   }
 }

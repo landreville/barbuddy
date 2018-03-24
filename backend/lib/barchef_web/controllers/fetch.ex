@@ -5,6 +5,10 @@ defmodule BarchefWeb.FetchMixin do
       require Logger
       require HTTPoison
 
+      def update_recipe(recipe) do
+        RecipeClient.put("/#{recipe["_id"]}", Jason.encode!(recipe)) |> process_response
+      end
+
       def render_fetch(conn, path, params \\ [], data_fn \\ &(&1)) do
         case fetch(path, params) do
           {:ok, data} -> json conn, %{"data" => data_fn.(data)}
@@ -15,7 +19,10 @@ defmodule BarchefWeb.FetchMixin do
       end
 
       def fetch(path, params \\ []) do
-        resp = RecipeClient.get path, [], params: params
+        RecipeClient.get(path, [], params: params) |> process_response
+      end
+
+      defp process_response(resp) do
         case resp do
           {:error, %HTTPoison.Error{:reason => error_message}} ->
             Logger.warn "Error retrieving recipes: " <> error_message
@@ -25,21 +32,23 @@ defmodule BarchefWeb.FetchMixin do
         end
       end
 
-      def process_body(body) do
+      defp process_body(body) do
         {:ok, data} = body
         case data do
           %{"rows" => rows} -> {:ok, Enum.map(rows, &combine_id_value/1)}
           %{"error" => message, "reason" => reason} ->
             Logger.warn "Error from couchdb: " <> message <> ": " <> reason
             {:error, message <> ": " <> reason}
+          _ -> {:ok, data}
         end
       end
 
       defp combine_id_value(item) do
         case item do
           %{"id" => id, "key" => key, "value" => nested} ->
-            Map.merge(%{"id" => id}, nested) |> Map.drop(["_id", "_rev"])
+            Map.merge(%{"_id" => id}, nested)
           %{"key" => key, "value" => true} -> key
+          _ -> item
         end
       end
     end

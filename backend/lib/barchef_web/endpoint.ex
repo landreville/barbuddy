@@ -18,7 +18,10 @@ defmodule BarchefWeb.Endpoint do
   end
 
   plug Plug.Logger
-  plug Corsica, origins: "*"
+  plug Corsica, origins: "*",
+                allow_methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+                allow_headers: ["content-type"],
+                log: [rejected: :info, invalid: :info, accepted: :info]
 
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],

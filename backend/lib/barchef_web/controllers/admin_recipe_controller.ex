@@ -1,6 +1,7 @@
 defmodule BarchefWeb.AdminRecipeController do
   use BarchefWeb, :controller
 
+
   @view_maps %{
     "name" => %{
       "all" => "all-recipes-by-name",
@@ -15,7 +16,31 @@ defmodule BarchefWeb.AdminRecipeController do
     "id" => %{
       "all" => "all-recipes-by-id"
     }
+
   }
+
+  def update(conn, params) do
+#    validate_recipe(params)
+#    %{"_id" => id, "_rev" => rev} = fetch_recipe(params["_id"])
+    case update_recipe(params) do
+      {:ok, data} -> json conn, %{"success" => true, "data" => data}
+      {:error, message} -> json conn, %{"success" => false, "message" => message}
+    end
+  end
+
+  defp validate_recipe(recipe) do
+    %{
+      "name" => name,
+      "description" => description,
+      "directions" => directions,
+      "ingredients" => ingredients
+    } = recipe
+    Enum.map(ingredients, &validate_ingredient/1)
+  end
+
+  defp validate_ingredient(ing) do
+    %{"name" => name} = ing
+  end
 
   def recipe(conn, %{"id" => id}) do
     fetch_recipes(conn, "id", "all", %{"key" => Jason.encode!(id)}, &(Enum.at(&1, 0)))
@@ -79,6 +104,11 @@ defmodule BarchefWeb.AdminRecipeController do
 
   defp recipes_to_ids(recipes) do
     for r <- recipes, do: r["id"]
+  end
+
+  defp fetch_recipe(id) do
+    fetch("all-recipes-by-id", %{"key" => Jason.encode!(id)}) |> Enum.at(0)
+
   end
 
   defp fetch_recipes(conn, category, view, params \\ [], data_fn \\ &(&1)) do

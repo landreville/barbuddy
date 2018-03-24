@@ -117,10 +117,6 @@ function (doc) {
 
 // validate_doc_update
 function (newDoc, oldDoc, userCtx) {
-  if (userCtx.roles.indexOf('_admin') === -1) {
-    throw({ forbidden: 'Permission denied.' });
-  }
-
   var validTypes = ['recipe', 'ingredient', 'favourite', 'user'];
   if (validTypes.indexOf(newDoc.type) === -1) {
     throw({ forbidden: 'Unknown document type.' });
@@ -128,23 +124,5 @@ function (newDoc, oldDoc, userCtx) {
 
   if (oldDoc && oldDoc.type !== newDoc.type) {
     throw({ forbidden: 'Cannot change type of document.' });
-  }
-
-  function require(field, message, doctype) {
-    doctype = doctype || 'Document';
-    message = message || doctype + ' must have a ' + field;
-    if (!newDoc[field]) {
-      throw({ forbidden: message });
-    }
-  }
-
-  if (newDoc.type === 'recipe') {
-    require('name');
-    require('ingredients');
-  } else if (newDoc.type === 'favourite') {
-    require('recipeId');
-    require('userId');
-  } else if (newDoc.type === 'ingredient') {
-    require('name');
   }
 };

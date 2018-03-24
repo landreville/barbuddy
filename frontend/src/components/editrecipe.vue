@@ -186,8 +186,9 @@ export default {
       event.preventDefault();
       let saveDoc = Object.assign({}, this.recipe);
       saveDoc.ingredients.concat(this.newIngredients.filter(el => el.name));
-      // TODO: submit document
-      this.$router.push({ name: 'recipe', params: { id: saveDoc.id } });
+      axios.put(this.recipeUrl + saveDoc._id, saveDoc).then(
+        () => this.$router.push({ name: 'recipe', params: { id: saveDoc._id } })
+      );
     }
   }
 };

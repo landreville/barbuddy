@@ -7,6 +7,10 @@
     </v-card-title>
 
     <div class="card-body">
+      <div class="description">
+        {{ recipe.description }}
+      </div>
+
       <div class="ingredients">
         <h2 class="ingredient-subtitle">Ingredients</h2>
         <ul class="ingredient-list">
@@ -30,7 +34,7 @@
     </div>
 
     <v-card-actions>
-        <v-btn color="info" :to="{name: 'editrecipe', params: { id: recipe.id }}">
+        <v-btn color="info" :to="{name: 'editrecipe', params: { id: recipe._id }}">
           Edit
         </v-btn>
     </v-card-actions>

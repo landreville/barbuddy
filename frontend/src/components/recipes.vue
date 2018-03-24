@@ -5,7 +5,7 @@
         v-for="(item, index) in recipes"
         :item="item">
 
-        <v-list-tile class="list-tile" avatar :index="index" :key="item.name">
+        <v-list-tile class="list-tile" avatar :index="index" :key="item._id">
 
           <!-- TODO: Change to square image -->
           <v-list-tile-avatar>
@@ -14,7 +14,7 @@
 
           <v-list-tile-content>
             <v-list-tile-title>
-              <router-link :to="{name: 'recipe', params: { id: item.id }}">
+              <router-link :to="{name: 'recipe', params: { id: item._id }}">
                 {{ item.name }}
               </router-link>
             </v-list-tile-title>
