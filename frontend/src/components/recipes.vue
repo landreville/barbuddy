@@ -43,38 +43,16 @@ export default {
   created() {
     this.fetchInitialRecipes();
   },
-  mounted() {
-    this.addFetchScrollListener();
-  },
   data() {
     return {
       recipes: [],
       lastkey: null,
       recipesUrl: 'http://localhost:4000/api/admin/recipes',
       recipeUrl: 'http://localhost:4000/api/admin/recipe',
-      limit: 25,
       fetching: null
     };
   },
   methods: {
-    addFetchScrollListener() {
-      document.addEventListener('scroll', () => {
-        if (this.fetching) {
-          return;
-        }
-        const offsetHeight = document.documentElement.offsetHeight;
-        const windowHeight = window.innerHeight;
-        const scrollPos = (
-          window.scrollY
-          || window.pageYOffset
-          || document.body.scrollTop
-          + ((document.documentElement && document.documentElement.scrollTop) || 0)
-        );
-        if (windowHeight + scrollPos >= offsetHeight * 0.75) {
-          this.fetchMoreRecipes();
-        }
-      });
-    },
     fetchInitialRecipes() {
       this.fetching = axios.get(
         this.recipesUrl,
@@ -85,21 +63,6 @@ export default {
         this.recipes = response.data.data;
       });
     },
-    fetchMoreRecipes(event) {
-      if (event) {
-        event.preventDefault();
-      }
-      if (this.fetching) {
-        return;
-      }
-
-      const params = { limit: this.limit, startkey: this.lastkey, skip: 1 };
-      this.fetching = axios.get(this.recipesUrl, { params }).then((response) => {
-        this.saveLastKey(response);
-        this.fetching = null;
-        response.data.rows.map(el => this.recipes.push(el));
-      });
-    },
     getThumbnailUrl(recipe) {
       if (recipe.thumbnail) {
         return `${this.recipeUrl}/${recipe._id}/image/${recipe.thumbnail}`;
@@ -107,9 +70,9 @@ export default {
       return '';
     },
     saveLastKey(response) {
-      if (response.data && response.data.rows && response.data.rows.length > 0) {
+      if (response.data && response.data.length > 0) {
         this.lastkey = JSON.stringify(
-          response.data.rows[response.data.rows.length - 1].key
+          response.data[response.data.length - 1].key
         );
       }
     }
