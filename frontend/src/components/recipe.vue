@@ -1,7 +1,8 @@
 <template>
   <v-card>
-    <v-card-media :src="imageUrl" height="600px">
-    </v-card-media>
+    <div class="card-banner">
+      <img class="banner-img" :src="imageUrl"/>
+    </div>
     <v-card-title primary-title>
       <h1 class="ingredient-title">{{ recipe.name }}</h1>
     </v-card-title>
@@ -42,6 +43,9 @@
 </template>
 
 <style scoped>
+  .banner-img{
+    width: 100%;
+  }
   .card{
     margin-top: 2rem;
   }

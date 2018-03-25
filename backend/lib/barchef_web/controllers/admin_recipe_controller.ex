@@ -46,7 +46,9 @@ defmodule BarchefWeb.AdminRecipeController do
     %{"_rev" => update_rev} = fetch_recipe(id)
     case update_recipe_image(id, update_rev, image, filename) do
       {:ok,  %{"rev" => rev}} ->
-        recipe = fetch_recipe(id) |> Map.put("image", filename)
+        recipe = fetch_recipe(id)
+                 |> Map.put("image", filename)
+                 |> Map.put("thumbnail", filename)
         case update_recipe(Map.put(recipe, "_rev", rev)) do
           {:ok, _} -> Logger.info "Updated image on recipe."
           {:error, message} ->

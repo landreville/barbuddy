@@ -8,8 +8,9 @@
         <v-list-tile class="list-tile" avatar :index="index" :key="item._id">
 
           <!-- TODO: Change to square image -->
+
           <v-list-tile-avatar>
-            <img src="/static/photos/cocktails/cocktail.jpg">
+            <img :src="getThumbnailUrl(item)">
           </v-list-tile-avatar>
 
           <v-list-tile-content>
@@ -29,7 +30,9 @@
 </template>
 
 <style scoped>
-
+  .avatar img{
+    border-radius: 5px;
+  }
 </style>
 
 <script>
@@ -48,6 +51,7 @@ export default {
       recipes: [],
       lastkey: null,
       recipesUrl: 'http://localhost:4000/api/admin/recipes',
+      recipeUrl: 'http://localhost:4000/api/admin/recipe',
       limit: 25,
       fetching: null
     };
@@ -95,6 +99,12 @@ export default {
         this.fetching = null;
         response.data.rows.map(el => this.recipes.push(el));
       });
+    },
+    getThumbnailUrl(recipe) {
+      if (recipe.thumbnail) {
+        return `${this.recipeUrl}/${recipe._id}/image/${recipe.thumbnail}`;
+      }
+      return '';
     },
     saveLastKey(response) {
       if (response.data && response.data.rows && response.data.rows.length > 0) {
