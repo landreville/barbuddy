@@ -9,6 +9,7 @@
     <v-form>
       <div class="card-body">
         <v-text-field label="Title" v-model="recipe.name"></v-text-field>
+        <v-select :items="catalogItems" label="Catalog" v-model="recipe.catalog"></v-select>
         <v-text-field label="Description" v-model="recipe.description"></v-text-field>
         <fileinput accept="image/*" @input="getUploadedFile"/>
 
@@ -96,6 +97,7 @@ export default {
       recipe: {},
       recipeUrl: 'http://localhost:4000/api/admin/recipe/',
       ingredientsUrl: 'http://localhost:4000/api/admin/ingredients/',
+      catalogsUrl: 'http://localhost:4000/api/admin/catalogs/',
       units: {
         ounce: 'oz',
         cube: 'cubes',
@@ -112,6 +114,7 @@ export default {
       unitItems: [],
       ingredients: [],
       newIngredients: [{}],
+      catalogItems: []
     };
   },
   watch: {
@@ -121,6 +124,7 @@ export default {
     this.fetchRecipe();
     this.fetchIngredients();
     this.unitItems = this.parseUnitItems(this.units);
+    this.catalogItems = this.fetchCatalogs();
   },
   methods: {
     newIngredientChanged() {
@@ -134,6 +138,11 @@ export default {
       if (emptyCount === 0) {
         this.newIngredients.push({});
       }
+    },
+    fetchCatalogs() {
+      axios.get(this.catalogsUrl).then(
+        (response) => { this.catalogItems = response.data.data; }
+      );
     },
     fetchIngredients() {
       axios.get(this.ingredientsUrl).then(

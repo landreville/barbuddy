@@ -1,50 +1,85 @@
 <template>
-  <div class="header">
-    <div class="header__title">
-        <a class="header__link" href="/">
-            {{ site_title }}
-        </a>
-    </div>
+  <div>
+  <v-navigation-drawer app v-model="drawer">
+    <v-list>
+      <v-list-tile>
+        <v-list-tile-title class="title">
+          Cocktail Catalogs
+        </v-list-tile-title>
+      </v-list-tile>
+    </v-list>
+    <v-list class="catalog-list">
+      <v-divider></v-divider>
+
+      <v-list-tile :to="{ name: 'recipes' }">
+        <v-list-tile-content>
+          All Cocktails
+        </v-list-tile-content>
+      </v-list-tile>
+
+      <v-list-tile v-for="catalog in catalogs"
+                   :catalog="catalog" :key="catalog"
+                   :to="{ name: 'recipes' }">
+        <v-list-tile-content>{{ catalog }}
+        </v-list-tile-content>
+      </v-list-tile>
+
+      <v-divider></v-divider>
+
+      <v-list-tile>
+        <v-list-tile-content>
+          <v-btn color="info" small>Add Catalog</v-btn>
+        </v-list-tile-content>
+      </v-list-tile>
+    </v-list>
+  </v-navigation-drawer>
+  <v-toolbar fixed app>
+    <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+    <v-toolbar-title>Bar Chef</v-toolbar-title>
+    <v-spacer></v-spacer>
+    <!--<v-toolbar-items class="hidden-sm-and-down">-->
+      <!--<v-btn flat>Search</v-btn>-->
+    <!--</v-toolbar-items>-->
+  </v-toolbar>
   </div>
 </template>
 
 <script>
-  export default {
-    name: "header",
-    data() {
-      return {
-        site_title: "Bar Chef"
-      }
+import axios from 'axios';
+
+export default {
+  name: 'app-header',
+  data() {
+    return {
+      site_title: 'Bar Chef',
+      catalogsUrl: 'http://localhost:4000/api/admin/catalogs/',
+      drawer: false,
+      catalogs: []
+    };
+  },
+  created() {
+    this.fetchCatalogs();
+  },
+  methods: {
+    fetchCatalogs() {
+      axios.get(this.catalogsUrl).then(
+        (response) => { this.catalogs = response.data.data; }
+      );
     }
   }
+};
 </script>
 
 <style scoped>
-  .header{
-    text-align: center;
-    margin-bottom: 5rem;
+  .toolbar__title {
+    font-family: "Josefin Sans", sans-serif;
+    font-weight: bold;
+    font-size: 2rem;
+    padding-top: 10px;
   }
-
-  .header__title {
-      font-family: "Josefin Sans", sans-serif;
-      font-weight: bold;
-      font-size: 5rem;
-      line-height: 5rem;
-  }
-
-  a.header__link{
-    color: rgb(68, 68, 68);
-  }
-
-  a.header__link:hover{
-      /* Link underline that clears descenders */
-      color: rgb(68, 68, 68);
-      /* Shadow is same colour as background. */
-      text-shadow: 3px 0 #ffffff, 2px 0 #ffffff, 1px 0 #ffffff, -1px 0 #ffffff, -2px 0 #ffffff, -3px 0 #ffffff;
-      text-decoration: none;
-      background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.6) 50%);
-      background-repeat: repeat-x;
-      background-size: 1px 9px;
-      background-position: 0 3.9rem;
+  .title{
+    font-family: "Josefin Slab", sans-serif;
+    font-weight: bold;
+    padding: 2rem 0;
   }
 </style>

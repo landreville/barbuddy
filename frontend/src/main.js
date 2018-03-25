@@ -7,6 +7,7 @@ import 'vuetify/dist/vuetify.min.css';
 import BarchefApp from './App';
 import router from './router';
 import './assets/css/main.styl';
+import '../node_modules/@fortawesome/fontawesome';
 
 Vue.config.productionTip = false;
 

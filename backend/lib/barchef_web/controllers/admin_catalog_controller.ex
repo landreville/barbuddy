@@ -4,7 +4,7 @@ defmodule BarchefWeb.AdminCatalogController do
   def catalogs(conn, _params) do
     case fetch("all-catalogs", %{"group" => "true"}) do
       {:ok, data} ->
-        json conn, %{"data" => Enum.map(data, fn (%{"key" => catalog}) -> catalog end)}
+        json conn, %{"data" => data}
       {:error, message} ->
         Logger.warn "Error: " <> message
         conn |> put_status(500)
