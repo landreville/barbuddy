@@ -10,6 +10,7 @@
       <div class="card-body">
         <v-text-field label="Title" v-model="recipe.name"></v-text-field>
         <v-text-field label="Description" v-model="recipe.description"></v-text-field>
+        <fileinput accept="image/*" @input="getUploadedFile"/>
 
         <div class="ingredients">
           <h2 class="ingredient-subtitle">Ingredients</h2>
@@ -19,7 +20,7 @@
                 :ingredient="ingredient"
                 :key="index">
 
-              <edit-ingredient
+              <editingredient
                 :ingredient.sync="ingredient"
                 :ingredient-items="ingredients"
                 :unit-items="unitItems"/>
@@ -29,7 +30,7 @@
                 v-for="(ingredient, index) in newIngredients"
                 :ingredient="ingredient"
                 :key="index + '-new'">
-              <edit-ingredient
+              <editingredient
                 :ingredient.sync="ingredient"
                 v-on:change="newIngredientChanged"
                 :ingredient-items="ingredients"
@@ -84,13 +85,12 @@
 <script>
 import axios from 'axios';
 import editingredient from './editingredient';
+import fileinput from './fileinput';
 
 export default {
   name: 'editrecipe',
   props: ['id'],
-  components: {
-    editingredient,
-    'edit-ingredient': editingredient },
+  components: { editingredient, fileinput },
   data() {
     return {
       recipe: {},
@@ -158,6 +158,9 @@ export default {
       }
       return `${formattedAmount} ${this.pluralize(formattedUnit)}`;
     },
+    getUploadedFile(e) {
+      this.image = e;
+    },
     singleize(unit) {
       const map = { ounce: 'oz' };
       if (unit in map) {
@@ -186,9 +189,19 @@ export default {
       event.preventDefault();
       let saveDoc = Object.assign({}, this.recipe);
       saveDoc.ingredients.concat(this.newIngredients.filter(el => el.name));
-      axios.put(this.recipeUrl + saveDoc._id, saveDoc).then(
-        () => this.$router.push({ name: 'recipe', params: { id: saveDoc._id } })
+      axios.put(this.recipeUrl + this.recipe._id, saveDoc).then(
+        this.saveImage
+      ).then(
+        () => this.$router.push({ name: 'recipe', params: { id: this.recipe._id } })
       );
+    },
+    saveImage() {
+      if (!this.image) {
+        return;
+      }
+      let data = new FormData();
+      data.append('image', this.image);
+      return axios.put(`${this.recipeUrl}${this.recipe._id}/image`, data);
     }
   }
 };

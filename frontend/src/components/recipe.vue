@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-media src="">
+    <v-card-media :src="imageUrl" height="600px">
     </v-card-media>
     <v-card-title primary-title>
       <h1 class="ingredient-title">{{ recipe.name }}</h1>
@@ -34,20 +34,24 @@
     </div>
 
     <v-card-actions>
-        <v-btn color="info" :to="{name: 'editrecipe', params: { id: recipe._id }}">
-          Edit
-        </v-btn>
+      <v-btn color="info" :to="{name: 'editrecipe', params: { id: recipe._id }}">
+        Edit
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <style scoped>
+  .card{
+    margin-top: 2rem;
+  }
   .card__title{
     padding:2rem;
   }
   .card-body{
     text-align: left;
     padding: 2rem;
+    padding-top: 0;
   }
   .card__actions{
     padding: 1rem 2rem;
@@ -75,9 +79,6 @@
   .ingredient-amount{
     width: 150px;
   }
-  .ingredient-name{
-
-  }
 </style>
 
 <script>
@@ -104,6 +105,9 @@ export default {
       ).then(
         (response) => {
           this.recipe = response.data.data;
+          if (this.recipe.image) {
+            this.imageUrl = `${this.recipeUrl}${this.$route.params.id}/image/${this.recipe.image}`;
+          }
         }
       );
     },

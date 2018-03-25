@@ -9,6 +9,18 @@ defmodule BarchefWeb.FetchMixin do
         RecipeClient.put("/#{recipe["_id"]}", Jason.encode!(recipe)) |> process_response
       end
 
+      def update_recipe_image(id, rev, image, attname) do
+        RecipeClient.put(
+          "/#{id}/#{attname}",
+          {:file, image.path},
+          %{"Content-Type" => image.content_type, "If-Match" => rev}
+        ) |> process_response
+      end
+
+      def fetch_image(id, attname) do
+        RecipeClient.get("/#{id}/#{attname}")
+      end
+
       def render_fetch(conn, path, params \\ [], data_fn \\ &(&1)) do
         case fetch(path, params) do
           {:ok, data} -> json conn, %{"data" => data_fn.(data)}
@@ -32,8 +44,8 @@ defmodule BarchefWeb.FetchMixin do
         end
       end
 
-      defp process_body(body) do
-        {:ok, data} = body
+      defp process_body(data) do
+        data = Jason.decode!(data)
         case data do
           %{"rows" => rows} -> {:ok, Enum.map(rows, &combine_id_value/1)}
           %{"error" => message, "reason" => reason} ->

@@ -23,6 +23,8 @@ defmodule BarchefWeb.Router do
     get "/admin/recipes/:view", AdminRecipeController, :recipes_view
     get "/admin/recipe/:id", AdminRecipeController, :recipe
     put "/admin/recipe/:id", AdminRecipeController, :update
+    get "/admin/recipe/:id/image/:filename", AdminRecipeController, :get_image
+    put "/admin/recipe/:id/image", AdminRecipeController, :update_image
     get "/admin/ingredients", AdminIngredientController, :ingredients
     get "/admin/ingredients/:view", AdminIngredientController, :ingredients_view
   end

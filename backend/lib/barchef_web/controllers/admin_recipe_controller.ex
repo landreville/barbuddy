@@ -1,7 +1,6 @@
 defmodule BarchefWeb.AdminRecipeController do
   use BarchefWeb, :controller
 
-
   @view_maps %{
     "name" => %{
       "all" => "all-recipes-by-name",
@@ -16,7 +15,6 @@ defmodule BarchefWeb.AdminRecipeController do
     "id" => %{
       "all" => "all-recipes-by-id"
     }
-
   }
 
   def update(conn, params) do
@@ -25,6 +23,57 @@ defmodule BarchefWeb.AdminRecipeController do
     case update_recipe(params) do
       {:ok, data} -> json conn, %{"success" => true, "data" => data}
       {:error, message} -> json conn, %{"success" => false, "message" => message}
+    end
+  end
+
+  def get_image(conn, %{"id" => id, "filename" => filename}) do
+    case fetch_image(id, filename) do
+      { :ok, resp } ->
+        %{"Content-Type" => content_type} = Map.new(resp.headers)
+        conn
+         |> put_resp_content_type(content_type)
+         |> send_resp(resp.status_code, resp.body)
+      { :error, _error } ->
+        conn
+          |> put_status(:bad_gateway)
+          |> text "Error"
+    end
+  end
+
+  def update_image(conn, %{"id" => id, "image" => image}) do
+    ext = String.split(image.content_type, "/") |> Enum.at(-1)
+    filename = "main.#{ext}"
+    %{"_rev" => update_rev} = fetch_recipe(id)
+    case update_recipe_image(id, update_rev, image, filename) do
+      {:ok,  %{"rev" => rev}} ->
+        recipe = fetch_recipe(id) |> Map.put("image", filename)
+        case update_recipe(Map.put(recipe, "_rev", rev)) do
+          {:ok, _} -> Logger.info "Updated image on recipe."
+          {:error, message} ->
+            Logger.warn "#{inspect recipe}"
+            Logger.warn "Error updating recipe: #{inspect message}"
+        end
+      {:error, message} ->
+        Logger.warn "Error uploading image: #{inspect message}"
+    end
+    json conn, %{"success" => true}
+  end
+
+  defp make_id(recipe) do
+    %{"name" => name} = recipe
+    id = name |> String.downcase |> String.replace("[^a-z0-9-]+", "-")
+    check_id(recipe, id)
+  end
+
+  defp check_id(recipe, id, i \\ 0) do
+    if i > 0 do
+      next_id = id <> i
+    else
+      next_id = id
+    end
+    case fetch_recipe(next_id) do
+      nil -> Map.merge(%{"id" => next_id}, recipe)
+      _ -> check_id(recipe, id, i+1)
     end
   end
 
@@ -107,8 +156,8 @@ defmodule BarchefWeb.AdminRecipeController do
   end
 
   defp fetch_recipe(id) do
-    fetch("all-recipes-by-id", %{"key" => Jason.encode!(id)}) |> Enum.at(0)
-
+    {:ok, recipe} = fetch("all-recipes-by-id", %{"key" => Jason.encode!(id)})
+    Enum.at(recipe, 0)
   end
 
   defp fetch_recipes(conn, category, view, params \\ [], data_fn \\ &(&1)) do

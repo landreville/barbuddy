@@ -11,10 +11,4 @@ defmodule BarChef.RecipeClient do
       _ -> @design_url <> url
     end
   end
-
-  def process_response_body(body) do
-    body |> Jason.decode
-  end
-
-
 end

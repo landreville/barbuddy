@@ -50,6 +50,7 @@ module.exports = {
     'no-plusplus': 'off',
     'no-console': 'off',
     'prefer-const': 'off',
-    'no-underscore-dangle': 'off'
+    'no-underscore-dangle': 'off',
+    'consistent-return': 'off'
   }
 }
