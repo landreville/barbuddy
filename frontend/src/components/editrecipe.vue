@@ -84,7 +84,6 @@
 </style>
 
 <script>
-import axios from 'axios';
 import ApiClient from '../lib/apiclient';
 import editingredient from './editingredient';
 import fileinput from './fileinput';

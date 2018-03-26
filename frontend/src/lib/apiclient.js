@@ -53,9 +53,5 @@ export default {
     let data = new FormData();
     data.append('image', image);
     return axios.put(`${this.recipeBaseUrl}/${id}/image`, data);
-  },
-
-  getIngredients() {
-
   }
 };

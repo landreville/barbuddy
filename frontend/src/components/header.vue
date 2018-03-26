@@ -23,7 +23,7 @@
       </v-list-tile>
       <v-list-tile :to="{ name: 'recipes' }">
         <v-list-tile-content>
-          Unpublished Recipes
+          Unp
         </v-list-tile-content>
       </v-list-tile>
 
