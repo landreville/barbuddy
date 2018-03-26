@@ -51,6 +51,8 @@ module.exports = {
     'no-console': 'off',
     'prefer-const': 'off',
     'no-underscore-dangle': 'off',
-    'consistent-return': 'off'
+    'consistent-return': 'off',
+    'no-restricted-syntax': 'off',
+    'prefer-default-export': 'off'
   }
 }

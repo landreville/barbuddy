@@ -11,7 +11,7 @@
         <v-text-field label="Title" v-model="recipe.name"></v-text-field>
         <v-select :items="catalogItems" label="Catalog" v-model="recipe.catalog"></v-select>
         <v-text-field label="Description" v-model="recipe.description"></v-text-field>
-        <fileinput accept="image/*" @input="getUploadedFile"/>
+        <fileinput accept="image/*" @input="fileChosen"/>
 
         <div class="ingredients">
           <h2 class="ingredient-subtitle">Ingredients</h2>
@@ -85,6 +85,7 @@
 
 <script>
 import axios from 'axios';
+import ApiClient from '../lib/apiclient';
 import editingredient from './editingredient';
 import fileinput from './fileinput';
 
@@ -95,7 +96,7 @@ export default {
   data() {
     return {
       recipe: {},
-      recipeUrl: 'http://localhost:4000/api/admin/recipe/',
+      recipeUrl: 'http://localhost:4000/api/admin/recipes/',
       ingredientsUrl: 'http://localhost:4000/api/admin/ingredients/',
       catalogsUrl: 'http://localhost:4000/api/admin/catalogs/',
       units: {
@@ -139,50 +140,30 @@ export default {
         this.newIngredients.push({});
       }
     },
+
     fetchCatalogs() {
-      axios.get(this.catalogsUrl).then(
+      ApiClient.getCatalogs(
         (response) => { this.catalogItems = response.data.data; }
       );
     },
+
     fetchIngredients() {
-      axios.get(this.ingredientsUrl).then(
+      ApiClient.getIngredients(
         (response) => { this.ingredients = response.data.data; }
       );
     },
+
     fetchRecipe() {
-      axios.get(
-        this.recipeUrl + this.$route.params.id
-      ).then(
-        (response) => {
-          this.recipe = response.data.data;
-        }
+      ApiClient.getRecipe(
+        this.$route.params.id,
+        (resp) => { this.recipe = resp.data.data; }
       );
     },
-    formatAmount(amount, unit) {
-      const formattedUnit = unit || '';
-      const formattedAmount = amount || '';
 
-      if (amount === 1) {
-        return `${formattedAmount} ${this.singleize(formattedUnit)}`;
-      }
-      return `${formattedAmount} ${this.pluralize(formattedUnit)}`;
+    fileChosen(event) {
+      this.image = event;
     },
-    getUploadedFile(e) {
-      this.image = e;
-    },
-    singleize(unit) {
-      const map = { ounce: 'oz' };
-      if (unit in map) {
-        return map[unit];
-      }
-      return unit;
-    },
-    pluralize(unit) {
-      if (unit in this.units) {
-        return this.units[unit];
-      }
-      return unit;
-    },
+
     parseUnitItems(units) {
       const items = [];
       const unitKeys = Object.keys(units);
@@ -194,23 +175,16 @@ export default {
       }
       return items;
     },
+
     save(event) {
       event.preventDefault();
       let saveDoc = Object.assign({}, this.recipe);
       saveDoc.ingredients.concat(this.newIngredients.filter(el => el.name));
-      axios.put(this.recipeUrl + this.recipe._id, saveDoc).then(
-        this.saveImage
-      ).then(
+      ApiClient.putRecipe(
+        saveDoc,
+        this.image,
         () => this.$router.push({ name: 'recipe', params: { id: this.recipe._id } })
       );
-    },
-    saveImage() {
-      if (!this.image) {
-        return;
-      }
-      let data = new FormData();
-      data.append('image', this.image);
-      return axios.put(`${this.recipeUrl}${this.recipe._id}/image`, data);
     }
   }
 };

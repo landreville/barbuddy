@@ -86,14 +86,15 @@
 </style>
 
 <script>
-import axios from 'axios';
+import ApiClient from '../lib/apiclient';
 
 export default {
   props: ['id'],
   data() {
     return {
       recipe: {},
-      recipeUrl: 'http://localhost:4000/api/admin/recipe/',
+      recipeUrl: 'http://localhost:4000/api/admin/recipes/',
+      imageUrl: ''
     };
   },
   watch: {
@@ -104,14 +105,11 @@ export default {
   },
   methods: {
     fetchRecipe() {
-      axios.get(
-        this.recipeUrl + this.$route.params.id
-      ).then(
-        (response) => {
-          this.recipe = response.data.data;
-          if (this.recipe.image) {
-            this.imageUrl = `${this.recipeUrl}${this.$route.params.id}/image/${this.recipe.image}`;
-          }
+      ApiClient.getRecipe(
+        this.$route.params.id,
+        (resp) => {
+          this.recipe = resp.data.data;
+          this.imageUrl = `${ApiClient.recipeBaseUrl}/${this.$route.params.id}/image/${this.recipe.image}`;
         }
       );
     },

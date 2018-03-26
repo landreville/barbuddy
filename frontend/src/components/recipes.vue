@@ -36,7 +36,7 @@
 </style>
 
 <script>
-import axios from 'axios';
+import ApiClient from '../lib/apiclient';
 
 export default {
   name: 'recipes',
@@ -47,34 +47,18 @@ export default {
     return {
       recipes: [],
       lastkey: null,
-      recipesUrl: 'http://localhost:4000/api/admin/recipes',
-      recipeUrl: 'http://localhost:4000/api/admin/recipe',
       fetching: null
     };
   },
   methods: {
     fetchInitialRecipes() {
-      this.fetching = axios.get(
-        this.recipesUrl,
-        { params: { limit: this.limit } }
-      ).then((response) => {
-        this.saveLastKey(response);
-        this.fetching = null;
-        this.recipes = response.data.data;
-      });
+      ApiClient.getRecipes((resp) => { this.recipes = resp.data.data; });
     },
     getThumbnailUrl(recipe) {
       if (recipe.thumbnail) {
-        return `${this.recipeUrl}/${recipe._id}/image/${recipe.thumbnail}`;
+        return `${ApiClient.recipeBaseUrl}/${recipe._id}/image/${recipe.thumbnail}`;
       }
       return '';
-    },
-    saveLastKey(response) {
-      if (response.data && response.data.length > 0) {
-        this.lastkey = JSON.stringify(
-          response.data[response.data.length - 1].key
-        );
-      }
     }
   },
 };

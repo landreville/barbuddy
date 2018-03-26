@@ -13,7 +13,17 @@
 
       <v-list-tile :to="{ name: 'recipes' }">
         <v-list-tile-content>
-          All Cocktails
+          All Recipes
+        </v-list-tile-content>
+      </v-list-tile>
+      <v-list-tile :to="{ name: 'recipes' }">
+        <v-list-tile-content>
+          Live Recipes
+        </v-list-tile-content>
+      </v-list-tile>
+      <v-list-tile :to="{ name: 'recipes' }">
+        <v-list-tile-content>
+          Unpublished Recipes
         </v-list-tile-content>
       </v-list-tile>
 
