@@ -19,12 +19,15 @@ defmodule BarchefWeb.Router do
     pipe_through :api
     get "/admin/catalogs", AdminCatalogController, :catalogs
     get "/admin/catalogs/:catalog/recipes", AdminCatalogController, :catalogs_recipes
-    get "/admin/recipes", AdminRecipeController, :recipes
-    get "/admin/recipes/:view", AdminRecipeController, :recipes_view
-    get "/admin/recipe/:id", AdminRecipeController, :recipe
-    put "/admin/recipe/:id", AdminRecipeController, :update
-    get "/admin/recipe/:id/image/:filename", AdminRecipeController, :get_image
-    put "/admin/recipe/:id/image", AdminRecipeController, :update_image
+    get "/admin/recipes", AdminRecipeController, :index
+    get "/admin/recipes/:id", AdminRecipeController, :get
+    post "/admin/recipes", AdminRecipeController, :add
+    put "/admin/recipes/:id", AdminRecipeController, :update
+#    get "/admin/recipes/:view", AdminRecipeController, :recipes_view
+#    get "/admin/recipe/:id", AdminRecipeController, :recipe
+#    put "/admin/recipe/:id", AdminRecipeController, :update
+#    get "/admin/recipe/:id/image/:filename", AdminRecipeController, :get_image
+#    put "/admin/recipe/:id/image", AdminRecipeController, :update_image
     get "/admin/ingredients", AdminIngredientController, :ingredients
     get "/admin/ingredients/:view", AdminIngredientController, :ingredients_view
   end

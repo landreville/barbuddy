@@ -21,7 +21,7 @@ defmodule BarchefWeb do
     quote do
       use Phoenix.Controller, namespace: BarchefWeb
       require Logger
-      require Jason
+      require Poison
       import Plug.Conn
       import BarchefWeb.Router.Helpers
       import BarchefWeb.Gettext

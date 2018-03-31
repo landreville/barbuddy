@@ -18,7 +18,9 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:user_id]
 
-config :phoenix, :format_encoders, json: Jason
+config :phoenix, :format_encoders, json: Poison
+config :ecto, :json_library, Poison
+config :poison, keys: :atoms!
 
 
 # Import environment specific config. This must remain at the bottom

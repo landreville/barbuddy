@@ -16,7 +16,7 @@ defmodule BarchefWeb.AdminCatalogController do
          %{
            "data" => fetch(
              "all-recipes-by-catalog",
-             %{"key" => Jason.encode!(catalog)}
+             %{"key" => Poison.encode!(catalog)}
            )
          }
   end

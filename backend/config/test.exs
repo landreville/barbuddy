@@ -8,3 +8,12 @@ config :barchef, BarchefWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+# Configure your database
+config :barchef, Barchef.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  username: "postgres",
+  password: "postgres",
+  database: "peacock",
+  hostname: "172.17.0.2",
+  pool: Ecto.Adapters.SQL.Sandbox

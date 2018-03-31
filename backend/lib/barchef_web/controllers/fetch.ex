@@ -6,7 +6,7 @@ defmodule BarchefWeb.FetchMixin do
       require HTTPoison
 
       def update_recipe(recipe) do
-        RecipeClient.put("/#{recipe["_id"]}", Jason.encode!(recipe)) |> process_response
+        RecipeClient.put("/#{recipe["_id"]}", Poison.encode!(recipe)) |> process_response
       end
 
       def update_recipe_image(id, rev, image, attname) do
@@ -45,7 +45,7 @@ defmodule BarchefWeb.FetchMixin do
       end
 
       defp process_body(data) do
-        data = Jason.decode!(data)
+        data = Poison.decode!(data)
         case data do
           %{"rows" => rows} -> {:ok, Enum.map(rows, &combine_id_value/1)}
           %{"error" => message, "reason" => reason} ->
