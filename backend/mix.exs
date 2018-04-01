@@ -20,7 +20,7 @@ defmodule Barchef.Mixfile do
   def application do
     [
       mod: {Barchef.Application, []},
-      extra_applications: [:corsica, :logger, :runtime_tools, :httpoison]
+      extra_applications: [:corsica, :logger, :runtime_tools, :httpoison, :postgrex, :ecto]
     ]
   end
 

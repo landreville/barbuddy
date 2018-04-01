@@ -19,7 +19,7 @@ create table recipe (
   directions  text,
   story       text,
   active      boolean default false                              not null,
-  created     timestamp with time zone default CURRENT_TIMESTAMP not null,
+  inserted_at     timestamp with time zone default CURRENT_TIMESTAMP not null,
   photo_path  varchar
 );
 create index recipe_active_idx on recipe(active);

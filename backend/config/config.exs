@@ -5,6 +5,9 @@
 # is restricted to this project.
 use Mix.Config
 
+config :barchef,
+  ecto_repos: [Barchef.Repo]
+
 # Configures the endpoint
 config :barchef, BarchefWeb.Endpoint,
   url: [host: "localhost"],
@@ -20,7 +23,7 @@ config :logger, :console,
 
 config :phoenix, :format_encoders, json: Poison
 config :ecto, :json_library, Poison
-config :poison, keys: :atoms!
+#config :poison, keys: :atoms!
 
 
 # Import environment specific config. This must remain at the bottom

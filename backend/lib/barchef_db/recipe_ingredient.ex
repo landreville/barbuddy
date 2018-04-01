@@ -2,7 +2,6 @@ defmodule BarchefDB.RecipeIngredient do
   use Ecto.Schema
   import Ecto.Changeset
   alias Barchef.Repo, as: Repo
-  alias BarchefDB.Ingredient, as: Ingredient
 
   @primary_key false
 
@@ -14,20 +13,17 @@ defmodule BarchefDB.RecipeIngredient do
     field :garnish, :boolean, default: false
     field :optional, :boolean, default: false
 
-    has_one :ingredient,
+    belongs_to :ingredient,
             BarchefDB.Ingredient,
-            foreign_key: :ingredient_name, references: :ingredient_name
+            foreign_key: :ingredient_name, references: :ingredient_name, define_field: false
 
-    has_one :recipe,
+    belongs_to :recipe,
             BarchefDB.Recipe,
-            foreign_key: :recipe_name, references: :recipe_name
+            foreign_key: :recipe_name, references: :recipe_name, define_field: false
   end
 
   def changeset(recipe_ingredient, params \\ %{}) do
     recipe_ingredient
-    |> Repo.preload(:ingredient)
     |> cast(params, [:recipe_name, :ingredient_name, :amount, :unit, :garnish, :optional])
-    |> validate_required([:recipe_name, :ingredient_name])
-    |> put_assoc(:ingredient, %Ingredient{:ingredient_name => params[:ingredient_name]})
   end
 end

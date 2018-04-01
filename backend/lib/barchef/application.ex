@@ -8,6 +8,7 @@ defmodule Barchef.Application do
 
     # Define workers and child supervisors to be supervised
     children = [
+      supervisor(Barchef.Repo, []),
       # Start the endpoint when the application starts
       supervisor(BarchefWeb.Endpoint, []),
       # Start your own worker by calling: Barchef.Worker.start_link(arg1, arg2, arg3)
