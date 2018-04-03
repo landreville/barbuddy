@@ -12,25 +12,30 @@ defmodule BarchefWeb.AdminRecipeController do
   end
 
   def add(conn, params) do
-    changeset = Recipe.changeset(%Recipe{}, params)
+    changeset_render(conn, %Recipe{}, params, &Repo.insert/1)
+  end
 
-    case Repo.insert(changeset) do
+  def update(conn, params) do
+    recipe = Repo.get(Recipe, params["id"])
+    changeset_render(conn, recipe, params, &Repo.update/1)
+  end
+
+  defp changeset_render(conn, recipe, params, action) do
+    changeset = Recipe.changeset(recipe, params)
+    case action.(changeset) do
       {:ok, _record} -> json conn, %{"data" => %{"success" => true}}
       {:error, cs} ->
-        Logger.warn "Raw Errors: #{inspect cs.errors}"
+        Logger.warn "Errors inserting/updating recipe. " <>
+                    "Action: #{inspect action}. Errors: #{inspect cs.errors}"
         errors = change_errors_to_map(cs)
         json conn, %{"data" => %{"success" => false, "error" => errors}}
     end
     json conn, %{"data" => %{"success" => false}}
   end
 
-  def change_errors_to_map(%Ecto.Changeset{:errors => errors}) do
+  defp change_errors_to_map(%Ecto.Changeset{:errors => errors}) do
     errors
     |> Enum.map(fn({field, {message, _error_list}}) -> {field, message} end)
     |> Map.new
-  end
-
-  def update(conn, _params) do
-    json conn, %{"data" => %{"success" => true}}
   end
 end

@@ -1,5 +1,7 @@
 defmodule BarchefDB.Ingredient do
   use Ecto.Schema
+  import Ecto.Changeset
+  alias Barchef.Repo, as: Repo
 
   @primary_key false
 
@@ -24,6 +26,11 @@ defmodule BarchefDB.Ingredient do
     has_one :parent_ingredient,
             BarchefDB.Ingredient,
             foreign_key: :ingredient_name, references: :parent_ingredient_name
+  end
+
+  def changeset(ingredient, params \\ %{}) do
+    ingredient
+    |> cast(params, [:ingredient_name, :description, :parent_ingredient_name])
   end
 end
 
