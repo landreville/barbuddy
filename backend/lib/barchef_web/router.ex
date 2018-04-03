@@ -19,10 +19,10 @@ defmodule BarchefWeb.Router do
     pipe_through :api
     get "/admin/catalogs", AdminCatalogController, :catalogs
     get "/admin/catalogs/:catalog/recipes", AdminCatalogController, :catalogs_recipes
-    get "/admin/recipes", AdminRecipeController, :index
-    get "/admin/recipes/:id", AdminRecipeController, :get
-    post "/admin/recipes", AdminRecipeController, :add
-    put "/admin/recipes/:id", AdminRecipeController, :update
+    get "/recipes", RecipeController, :index
+    get "/recipes/:id", RecipeController, :get
+    post "/recipes", RecipeController, :add
+    put "/recipes/:id", RecipeController, :update
 #    get "/admin/recipes/:view", AdminRecipeController, :recipes_view
 #    get "/admin/recipe/:id", AdminRecipeController, :recipe
 #    put "/admin/recipe/:id", AdminRecipeController, :update

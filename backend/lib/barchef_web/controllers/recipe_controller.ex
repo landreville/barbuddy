@@ -1,4 +1,4 @@
-defmodule BarchefWeb.AdminRecipeController do
+defmodule BarchefWeb.RecipeController do
   use BarchefWeb, :controller
   alias BarchefDB.Recipe, as: Recipe
   alias Barchef.Repo, as: Repo
