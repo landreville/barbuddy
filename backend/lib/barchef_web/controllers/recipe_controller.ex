@@ -1,14 +1,40 @@
-defmodule BarchefWeb.RecipeController do
-  use BarchefWeb, :controller
-  alias BarchefDB.Recipe, as: Recipe
-  alias Barchef.Repo, as: Repo
-
-  def index(conn, _params) do
-    json conn, %{"data" => []}
+defimpl Poison.Encoder, for: Any do
+  def encode(%{__struct__: _} = struct, options) do
+    map = struct
+          |> Map.from_struct
+          |> sanitize_map
+    Poison.Encoder.Map.encode(map, options)
   end
 
-  def get(conn, %{"id" => _id}) do
-    json conn, %{"data" => %{}}
+  defp sanitize_map(map) do
+    # TODO: remove associations that are not loaded
+    Map.drop(map, [:__meta__, :__struct__])
+  end
+end
+
+defmodule BarchefWeb.RecipeController do
+  use BarchefWeb, :controller
+  alias BarchefDB.Recipe
+  alias BarchefDB.RecipeIngredient
+  alias Barchef.Repo, as: Repo
+  import Ecto.Query
+
+  def index(conn, _params) do
+    query = from r in Recipe,
+      join: ri in RecipeIngredient, on: r.recipe_name == ri.recipe_name,
+      select: r,
+      preload: [recipe_ingredients: ri]
+    recipes = Repo.all(query)
+    Logger.info "#{inspect recipes}"
+    json conn, %{"data" => recipes}
+  end
+
+  def get(conn, %{"id" => id}) do
+    query = from r in Recipe,
+      where: r.recipe_name == ^id,
+      select: r
+
+    json conn, %{"data" => Repo.one(query)}
   end
 
   def add(conn, params) do

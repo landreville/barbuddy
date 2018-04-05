@@ -17,18 +17,12 @@ defmodule BarchefWeb.Router do
 
   scope "/api", BarchefWeb do
     pipe_through :api
-    get "/admin/catalogs", AdminCatalogController, :catalogs
-    get "/admin/catalogs/:catalog/recipes", AdminCatalogController, :catalogs_recipes
+    get "/catalogs", CatalogController, :catalogs
     get "/recipes", RecipeController, :index
     get "/recipes/:id", RecipeController, :get
     post "/recipes", RecipeController, :add
     put "/recipes/:id", RecipeController, :update
-#    get "/admin/recipes/:view", AdminRecipeController, :recipes_view
-#    get "/admin/recipe/:id", AdminRecipeController, :recipe
-#    put "/admin/recipe/:id", AdminRecipeController, :update
-#    get "/admin/recipe/:id/image/:filename", AdminRecipeController, :get_image
-#    put "/admin/recipe/:id/image", AdminRecipeController, :update_image
-    get "/admin/ingredients", AdminIngredientController, :ingredients
-    get "/admin/ingredients/:view", AdminIngredientController, :ingredients_view
+    get "/ingredients", IngredientController, :ingredients
+    get "/ingredients/:view", IngredientController, :ingredients_view
   end
 end

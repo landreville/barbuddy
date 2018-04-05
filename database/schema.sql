@@ -85,3 +85,12 @@ create table fav_ingredient (
   constraint fav_ingredient_pk primary key (user_id, ingredient_name)
 );
 
+create table recipe_images(
+  recipe_name varchar references recipe(recipe_name) on update cascade,
+  image_type varchar not null check (image_type in ('main', 'thumbnail')),
+  width numeric not null,
+  height numeric not null,
+  mime_type varchar not null,
+  image bytea not null,
+  constraint recipe_image_pk primary key (recipe_name, image_type)
+);
