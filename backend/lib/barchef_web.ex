@@ -1,3 +1,23 @@
+defimpl Poison.Encoder, for: Any do
+  require Logger
+
+  def encode(%{__struct__: _} = struct, options) do
+    map = struct
+          |> Map.from_struct
+          |> sanitize_map(unloaded_assocs(struct))
+    Poison.Encoder.Map.encode(map, options)
+  end
+
+  defp sanitize_map(map, unloaded_assocs) do
+    Map.drop(map, [:__meta__, :__struct__] ++ unloaded_assocs)
+  end
+
+  defp unloaded_assocs(struct) do
+    struct.__struct__.__schema__(:associations)
+    |> Enum.filter(&(!Ecto.assoc_loaded?(Map.get(struct, &1))))
+  end
+end
+
 defmodule BarchefWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
@@ -25,7 +45,7 @@ defmodule BarchefWeb do
       import Plug.Conn
       import BarchefWeb.Router.Helpers
       import BarchefWeb.Gettext
-      use BarchefWeb.FetchMixin
+      import BarchefWeb.BaseController
     end
   end
 

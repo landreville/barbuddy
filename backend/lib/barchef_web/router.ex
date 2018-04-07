@@ -20,6 +20,8 @@ defmodule BarchefWeb.Router do
     get "/catalogs", CatalogController, :catalogs
     get "/recipes", RecipeController, :index
     get "/recipes/:id", RecipeController, :get
+    get "/recipes/:recipe_name/image/:image_type", RecipeImageController, :get
+    put "/recipes/:recipe_name/image/:image_type", RecipeImageController, :update
     post "/recipes", RecipeController, :add
     put "/recipes/:id", RecipeController, :update
     get "/ingredients", IngredientController, :ingredients

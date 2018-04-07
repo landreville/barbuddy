@@ -44,7 +44,8 @@ defmodule Barchef.Mixfile do
       {:httpoison, "~> 1.0"},
       {:plug, "~> 1.0"},
       {:corsica, "~> 1.0"},
-      {:poison, "~> 3.1"}
+      {:poison, "~> 3.1"},
+      {:fastimage, "~> 1.0.0-rc2"}
     ]
   end
 
