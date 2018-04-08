@@ -33,8 +33,10 @@ defmodule BarchefWeb.RecipeController do
 
   def get(conn, %{"id" => id}) do
     query = from r in Recipe,
+                 join: ri in RecipeIngredient,
                  where: r.recipe_name == ^id,
-                 select: r
+                 select: r,
+                 preload: [recipe_ingredients: ri]
 
     json conn, %{"data" => Repo.one(query)}
   end

@@ -1,87 +1,87 @@
 <template>
-  <v-card>
-    <div class="card-banner">
-      <img class="banner-img" :src="imageUrl"/>
-    </div>
-    <v-card-title primary-title>
-      <h1 class="ingredient-title">{{ recipe.name }}</h1>
-    </v-card-title>
-
-    <div class="card-body">
-      <div class="description">
-        {{ recipe.description }}
+  <div class="recipe">
+    <div class="recipe-card">
+      <div class="banner">
+        <img class="main-image" :src="photoUrl"/>
       </div>
-
-      <div class="ingredients">
-        <h2 class="ingredient-subtitle">Ingredients</h2>
-        <ul class="ingredient-list">
-          <li class="ingredient"
-              v-for="ingredient in recipe.ingredients"
-              :ingredient="ingredient"
-              :key="ingredient.name">
-            <div class="ingredient-amount">
-              {{ formatAmount(ingredient.amount, ingredient.unit) }}
-            </div>
-            <div class="ingredient-name">{{ ingredient.name }}</div>
-          </li>
-        </ul>
-      </div>
-      <div class="directions">
-        <h2 class="ingredient-subtitle">Directions</h2>
-        <p>
-          {{ recipe.directions }}
-        </p>
+      <div class="body">
+        <h1 class="recipe-name">{{ recipe.recipe_name }}</h1>
+        <div class="description">{{ recipe.description }}</div>
+        <div class="story">{{ recipe.story }}</div>
+        <div class="ingredients">
+          <h3 class="ingredient-title subtitle">Ingredients</h3>
+          <ul class="ingredient-list">
+            <li class="ingredient"
+                v-for="ingredient in recipe.recipe_ingredients"
+                :ingredient="ingredient"
+                :key="ingredient.name">
+              <div class="ingredient-amount">
+                {{ formatAmount(ingredient.amount, ingredient.unit) }}
+              </div>
+              <div class="ingredient-name">{{ ingredient.ingredient_name }}</div>
+            </li>
+          </ul>
+        </div>
+        <h3 class="directions-title subtitle">Directions</h3>
+        <div class="directions">{{ recipe.directions }}</div>
       </div>
     </div>
 
-    <v-card-actions>
-      <v-btn color="info" :to="{name: 'editrecipe', params: { id: recipe._id }}">
-        Edit
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+    <div class="controls">
+      <div class="edit">
+        <router-link :to="{ name: 'edit-recipe', params: { id: recipe.recipe_name } }">
+          Edit
+        </router-link>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-  .banner-img{
+  .recipe{
+    margin: 2rem auto;
+    max-width: 1000px;
+  }
+  .recipe-card{
+    background-color: white;
+
+    box-shadow: 0 2px 4px rgba(180, 180, 180, 0.8);
+  }
+  .main-image{
     width: 100%;
   }
-  .card{
-    margin-top: 2rem;
+  h1.recipe-name{
+    margin: 0;
+    padding: 1em 0 0 0;
+    line-height: 1em;
   }
-  .card__title{
-    padding:2rem;
+  .body{
+    padding: 0 2rem 2rem 2rem;
   }
-  .card-body{
-    text-align: left;
-    padding: 2rem;
-    padding-top: 0;
+  .description{
+    font-style: italic;
+    color: rgb(130, 130, 130);
+    line-height: 1.5em;
+    margin-bottom: 1rem;
   }
-  .card__actions{
-    padding: 1rem 2rem;
-    border-top: 2px solid rgb(240, 240, 240);
-  }
-  .ingredient-title{
+  .subtitle{
     font-family: "Josefin Slab", sans-serif;
-    font-weight: bold;
-    font-size: 3rem;
-    /* card title has enough padding already */
     padding: 0;
-    line-height: 3rem;
-  }
-  .ingredient-subtitle{
-    font-family: "Josefin Slab", sans-serif;
-    padding: 1rem 0;
   }
   .ingredient-list{
     list-style-type: none;
+    padding: 0;
   }
   .ingredient{
-    padding: 0 1rem;
+    padding: 0;
     display: flex;
   }
   .ingredient-amount{
     width: 150px;
+  }
+  .controls{
+    text-align: right;
+    margin: 0 1rem;
   }
 </style>
 
@@ -93,8 +93,7 @@ export default {
   data() {
     return {
       recipe: {},
-      recipeUrl: 'http://localhost:4000/api/admin/recipes/',
-      imageUrl: ''
+      photoUrl: null
     };
   },
   watch: {
@@ -105,11 +104,12 @@ export default {
   },
   methods: {
     fetchRecipe() {
-      ApiClient.getRecipe(
-        this.$route.params.id,
+      ApiClient.getRecipe(this.$route.params.id).then(
         (resp) => {
-          this.recipe = resp.data.data;
-          this.imageUrl = `${ApiClient.recipeBaseUrl}/${this.$route.params.id}/image/${this.recipe.image}`;
+          let recipe = resp.data.data;
+          recipe.recipe_ingredients.sort(this.sortIngredients);
+          this.recipe = recipe;
+          this.photoUrl = ApiClient.recipeImageUrl(recipe);
         }
       );
     },
@@ -147,6 +147,40 @@ export default {
         return map[unit];
       }
       return unit;
+    },
+    sortIngredients(a, b) {
+      if (a.unit === 'ounce' && b.unit !== 'ounce') {
+        return -1;
+      } else if (b.unit === 'ounce' && a.unit !== 'ounce') {
+        return 1;
+      }
+
+      if (a.unit !== b.unit) {
+        if (a.unit === null) {
+          return 1;
+        } else if (b.unit === null) {
+          return -1;
+        }
+        let x = a.unit.toLowerCase();
+        let y = b.unit.toLowerCase();
+        if (x < y) {
+          return -1;
+        } else if (x > y) {
+          return 1;
+        }
+      }
+
+      if (b.amount === a.amount) {
+        let x = a.ingredient_name.toLowerCase();
+        let y = b.ingredient_name.toLowerCase();
+        if (x < y) {
+          return -1;
+        } else if (x > y) {
+          return 1;
+        }
+      }
+
+      return b.amount - a.amount;
     }
   }
 };

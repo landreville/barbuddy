@@ -15,9 +15,9 @@ export default {
     axios.get(this.ingredientsUrl).then(callback);
   },
 
-  getRecipe(id, callback) {
+  getRecipe(id) {
     let url = `${this.recipeBaseUrl}/${id}`;
-    axios.get(url).then(callback);
+    return axios.get(url);
   },
 
   getRecipes(callback, view) {
@@ -26,7 +26,7 @@ export default {
       url = `${this.recipeBaseUrl}/${view}`;
     }
 
-    axios.get(url).then(callback);
+    return axios.get(url);
   },
 
   putRecipe(recipe, image, callback) {

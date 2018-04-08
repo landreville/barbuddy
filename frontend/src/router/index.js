@@ -21,7 +21,7 @@ export default new Router({
     },
     {
       path: '/recipes/:id/edit',
-      name: 'editrecipe',
+      name: 'edit-recipe',
       component: editrecipe,
       props: { default: true }
     }

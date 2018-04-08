@@ -6,9 +6,13 @@ defmodule BarchefWeb.RecipeImageController do
   def get(conn, %{"recipe_name" => recipe_name, "image_type" => image_type}) do
     ri = Repo.get_by(RecipeImage, recipe_name: recipe_name, image_type: image_type)
 
-    conn
-    |> put_resp_content_type(ri.mime_type)
-    |> send_resp(200, ri.image)
+    case ri do
+      nil -> conn |> send_resp(404, "")
+      %RecipeImage{} ->
+        conn
+        |> put_resp_content_type(ri.mime_type)
+        |> send_resp(200, ri.image)
+    end
   end
 
   def update(conn, params) do
