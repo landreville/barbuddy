@@ -1,10 +1,10 @@
-html{
-    font-family: "Raleway", sans-serif;
-    font-size: 20px;
-    line-height: 1.75em;
-    color: rgb(68, 68, 68);
+html {
+  font-family: "Raleway", sans-serif;
+  font-size: 20px;
+  line-height: 1.75em;
+  color: rgb(68, 68, 68);
 
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 /* If an element declares it's using a different sizing,
@@ -15,89 +15,75 @@ html{
 }
 
 html, body {
-    height: 100%;
+  height: 100%;
 }
 
 body {
-    margin: 0;
-    background-color: rgb(255, 255, 255);
+  margin: 0;
+  background-color: rgb(235, 235, 235);
 }
 
-.content-wrapper{
-    margin-left: 1rem;
-    margin-right: 1rem;
+.content-wrapper {
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
-.content{
-    width: 100%;
-    max-width: 960px;
-    margin: 0 auto 5rem auto;
+.content {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto 5rem auto;
 }
-
 
 a,
 a:visited {
-    color: rgb(37, 122,196);
-    text-decoration: none;
+  color: rgb(37, 122, 196);
+  text-decoration: none;
 }
 
-a:active{
-    color: rgb(29, 95, 151);
-    text-decoration: none;
+a:active {
+  color: rgb(29, 95, 151);
+  text-decoration: none;
 }
 
-a:hover{
-    color: rgb(29, 95, 151);
-    cursor: pointer;
-
-    text-decoration: none;
-    text-shadow: 3px 0 #ffffff, 2px 0 #ffffff, 1px 0 #ffffff, -1px 0 #ffffff, -2px 0 #ffffff, -3px 0 #ffffff;
-    text-decoration: none;
-    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.6) 50%);
-    background-repeat: repeat-x;
-    background-size: 1px 2px;
-    background-position: 0 1rem;
+a:hover {
+  color: rgb(29, 95, 151);
+  cursor: pointer;
+  text-decoration: underline;
 }
 
-a.header__link{
-    color: rgb(68, 68, 68);
+a.header__link {
+  color: rgb(68, 68, 68);
 }
 
-a.header__link:hover{
-    /* Link underline that clears descenders */
-    color: rgb(68, 68, 68);
-    /* Shadow is same colour as background. */
-    text-shadow: 3px 0 #ffffff, 2px 0 #ffffff, 1px 0 #ffffff, -1px 0 #ffffff, -2px 0 #ffffff, -3px 0 #ffffff;
-    text-decoration: none;
-    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.6) 50%);
-    background-repeat: repeat-x;
-    background-size: 1px 9px;
-    background-position: 0 3.9rem;
+a.header__link:hover {
+  /* Link underline that clears descenders */
+  color: rgb(68, 68, 68);
+  /* Shadow is same colour as background. */
+  text-shadow: 3px 0 #ffffff, 2px 0 #ffffff, 1px 0 #ffffff, -1px 0 #ffffff, -2px 0 #ffffff, -3px 0 #ffffff;
+  text-decoration: none;
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.6) 50%);
+  background-repeat: repeat-x;
+  background-size: 1px 9px;
+  background-position: 0 3.9rem;
 }
 
-h1, h2, h3, h4{
-    font-family: "Josefin Slab", sans-serif;
-    font-size: 2rem;
-    font-weight: bold;
-    line-height: 3rem;
-    padding: 0;
-    margin: 0;
-    margin-top: 2rem;
+h1, h2, h3, h4 {
+  font-family: "Josefin Slab", sans-serif;
+  font-size: 2rem;
+  font-weight: bold;
+  line-height: 3rem;
+  padding: 0;
+  margin: 2rem 0 0 0;
 }
 
-h2{
-    /* Underline that clears descenders. */
-    text-shadow: 3px 0 #ffffff, 2px 0 #ffffff, 1px 0 #ffffff, -1px 0 #ffffff, -2px 0 #ffffff, -3px 0 #ffffff;
-    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.6) 50%);
-    background-repeat: repeat-x;
-    background-size: 1px 3px;
-    background-position: 0 1.6rem;
-    /* Necessary to keep underline when wrapping */
-    display: inline;
+h2 {
+  font-size: 1.25rem;
+  margin-top: 1.25rem;
+  line-height: 1.75rem;
 }
 
-h3{
-    font-size: 1.25rem;
-    margin-top: 1.25rem;
-    line-height: 1.75rem;
+h3 {
+  font-size: 1.25rem;
+  margin-top: 1.25rem;
+  line-height: 1.75rem;
 }

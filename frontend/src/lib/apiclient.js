@@ -1,12 +1,11 @@
 import axios from 'axios';
 
-export default {
+export const baseUrl = 'http://localhost:4000/api';
 
-  baseUrl: 'http://localhost:4000/api/admin',
-  recipesBaseUrl: 'http://localhost:4000/api/admin/recipes',
-  recipeBaseUrl: 'http://localhost:4000/api/admin/recipe',
-  ingredientsUrl: 'http://localhost:4000/api/admin/ingredients/',
-  catalogsUrl: 'http://localhost:4000/api/admin/catalogs/',
+export default {
+  recipeBaseUrl: `${baseUrl}/recipes`,
+  ingredientsUrl: `${baseUrl}/ingredients`,
+  catalogsUrl: `${baseUrl}/catalogs`,
 
   getCatalogs(callback) {
     axios.get(this.catalogsUrl).then(callback);
@@ -21,18 +20,10 @@ export default {
     axios.get(url).then(callback);
   },
 
-  getRecipes(callback, view, search) {
-    let url = this.recipesBaseUrl;
+  getRecipes(callback, view) {
+    let url = this.recipeBaseUrl;
     if (view) {
-      url = `${this.recipesBaseUrl}/${view}`;
-    }
-
-    let params = {};
-    if (search) {
-      for (let key of Object.keys(search)) {
-        let value = search[key];
-        params[key] = JSON.encode(value);
-      }
+      url = `${this.recipeBaseUrl}/${view}`;
     }
 
     axios.get(url).then(callback);
@@ -53,5 +44,9 @@ export default {
     let data = new FormData();
     data.append('image', image);
     return axios.put(`${this.recipeBaseUrl}/${id}/image`, data);
+  },
+
+  recipeImageUrl(recipe) {
+    return `${baseUrl}/recipes/${recipe.recipe_name}/image/main`;
   }
 };

@@ -92,4 +92,3 @@ defmodule BarchefDB.Recipe do
   end
 
 end
-

@@ -7,8 +7,8 @@ defmodule BarchefDB.RecipeImage do
   @primary_key false
 
   schema "recipe_image" do
-    field :recipe_name, :string
-    field :image_type, :string
+    field :recipe_name, :string, primary_key: true
+    field :image_type, :string, primary_key: true
     field :width, :integer
     field :height, :integer
     field :mime_type, :string

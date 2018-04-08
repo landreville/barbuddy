@@ -15,8 +15,7 @@
     "axios": "^0.18.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
-    "vue-scrollto": "^2.11.0",
-    "vuetify": "^1.0.3"
+    "vue-scrollto": "^2.11.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
@@ -56,6 +55,7 @@
     "style-loader": "^0.20.3",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
+    "tailwindcss": "^0.5.2",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "url-loader": "^0.5.8",
     "vue-loader": "^13.3.0",
