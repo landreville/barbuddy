@@ -1,3 +1,18 @@
+
+/*
+Dark Red #4D1504
+Dark Orange #93360B
+Brown #7F4A20
+Orange-Brown #AC5A2A
+Orange #BD733E
+Tan #CBC498
+Dark Tan #BAAA80
+Grey-Green #919C8B
+Blue-Green #7B8E8C
+Dark Grey-Green #7A7C6E
+*/
+
+
 html {
   font-family: "Raleway", sans-serif;
   font-size: 20px;
@@ -20,7 +35,7 @@ html, body {
 
 body {
   margin: 0;
-  background-color: rgb(235, 235, 235);
+  background-color: rgba(203, 196, 152, 0.10);
 }
 
 .content-wrapper {
@@ -109,3 +124,4 @@ input[type="file"], button{
   color: rgb(68, 68, 68);
   font-weight: normal;
 }
+

@@ -33,7 +33,7 @@
 
 .card{
   width: 300px;
-  margin: 2rem;
+  margin: 1rem;
 
   border: 1px solid rgba(180, 180, 180, 0.5);
   box-shadow: 0 2px 2px rgba(180, 180, 180, 0.8);

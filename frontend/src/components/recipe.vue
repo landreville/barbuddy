@@ -39,13 +39,13 @@
 
 <style scoped>
   .recipe{
-    margin: 2rem auto;
+    margin: 0 auto 2rem auto;
     max-width: 1000px;
   }
   .recipe-card{
     background-color: white;
 
-    box-shadow: 0 2px 4px rgba(180, 180, 180, 0.8);
+    /*box-shadow: 0 2px 4px rgba(180, 180, 180, 0.8);*/
   }
   .main-image{
     width: 100%;

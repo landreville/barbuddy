@@ -53,6 +53,7 @@ module.exports = {
     'no-underscore-dangle': 'off',
     'consistent-return': 'off',
     'no-restricted-syntax': 'off',
-    'prefer-default-export': 'off'
+    'prefer-default-export': 'off',
+    'import/prefer-default-export': 'off',
   }
 }
