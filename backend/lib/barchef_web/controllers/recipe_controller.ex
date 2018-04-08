@@ -7,7 +7,7 @@ defmodule BarchefWeb.RecipeController do
 
   def index(conn, params) do
     query = from r in Recipe,
-                 join: ri in RecipeIngredient,
+                 join: ri in assoc(r, :recipe_ingredients),
                  on: r.recipe_name == ri.recipe_name,
                  select: r,
                  preload: [
@@ -33,7 +33,7 @@ defmodule BarchefWeb.RecipeController do
 
   def get(conn, %{"id" => id}) do
     query = from r in Recipe,
-                 join: ri in RecipeIngredient,
+                 join: ri in assoc(r, :recipe_ingredients),
                  where: r.recipe_name == ^id,
                  select: r,
                  preload: [recipe_ingredients: ri]

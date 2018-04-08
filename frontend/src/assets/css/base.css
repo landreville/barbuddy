@@ -87,3 +87,25 @@ h3 {
   margin-top: 1.25rem;
   line-height: 1.75rem;
 }
+
+textarea, select, input{
+  font-family: "Raleway", sans-serif;
+  font-size: 20px;
+  line-height: 1.75em;
+  color: rgb(68, 68, 68);
+
+  padding: 0 0.5rem;
+}
+
+input[type="text"], input[type="number"], textarea{
+  border: 1px solid rgb(200, 200, 200);
+  border-radius: 4px;
+}
+
+input[type="file"], button{
+  font-family: "Raleway", sans-serif;
+  font-size: 20px;
+  line-height: 1.75em;
+  color: rgb(68, 68, 68);
+  font-weight: normal;
+}

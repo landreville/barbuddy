@@ -17,7 +17,9 @@ defmodule BarchefWeb.Router do
 
   scope "/api", BarchefWeb do
     pipe_through :api
-    get "/catalogs", CatalogController, :catalogs
+    get "/catalogs", CatalogController, :index
+    get "/categories", CategoryController, :index
+    get "/vessels", VesselController, :index
     get "/recipes", RecipeController, :index
     get "/recipes/:id", RecipeController, :get
     get "/recipes/:recipe_name/image/:image_type", RecipeImageController, :get
@@ -28,3 +30,4 @@ defmodule BarchefWeb.Router do
     get "/ingredients/:view", IngredientController, :ingredients_view
   end
 end
+

@@ -92,7 +92,7 @@ export default {
   },
   methods: {
     fetchRecipes() {
-      ApiClient.getRecipes().then((resp) => { this.recipes = resp.data.data; });
+      ApiClient.getRecipes().then((data) => { this.recipes = data; });
     },
     photoUrl(recipe) {
       return ApiClient.recipeImageUrl(recipe);

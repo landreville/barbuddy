@@ -1,13 +1,13 @@
-defmodule BarchefWeb.CatalogController do
+defmodule BarchefWeb.VesselController do
   use BarchefWeb, :controller
   import Ecto.Query
   alias Barchef.Repo
-  alias BarchefDB.Catalog
+  alias BarchefDB.Vessel
 
   def index(conn, _params) do
-    query = from cat in Catalog,
-      select: cat.catalog,
-      order_by: cat.catalog
+    query = from item in Vessel,
+      select: item.vessel,
+      order_by: item.vessel
     json conn, %{"data" => Repo.all(query)}
   end
 end

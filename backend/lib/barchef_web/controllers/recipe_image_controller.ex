@@ -22,7 +22,7 @@ defmodule BarchefWeb.RecipeImageController do
       image_type: params["image_type"],
       recipe_name: params["recipe_name"]
     )
-
+    
     case recipe_image do
       %RecipeImage{} ->
         changeset_render(

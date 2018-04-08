@@ -1,86 +1,164 @@
 <template>
-  <v-card>
-    <v-card-media src="">
-    </v-card-media>
-    <v-card-title primary-title>
-      <h1 class="recipe-title">{{ recipe.name }}</h1>
-    </v-card-title>
-
-    <v-form>
-      <div class="card-body">
-        <v-text-field label="Title" v-model="recipe.name"></v-text-field>
-        <v-select :items="catalogItems" label="Catalog" v-model="recipe.catalog"></v-select>
-        <v-text-field label="Description" v-model="recipe.description"></v-text-field>
-        <fileinput accept="image/*" @input="fileChosen"/>
-
-        <div class="ingredients">
-          <h2 class="ingredient-subtitle">Ingredients</h2>
-          <ul class="ingredient-list">
-            <li class="ingredient"
-                v-for="(ingredient, index) in recipe.ingredients"
-                :ingredient="ingredient"
-                :key="index">
-
-              <editingredient
-                :ingredient.sync="ingredient"
-                :ingredient-items="ingredients"
-                :unit-items="unitItems"/>
-
-            </li>
-            <li class="ingredient"
-                v-for="(ingredient, index) in newIngredients"
-                :ingredient="ingredient"
-                :key="index + '-new'">
-              <editingredient
-                :ingredient.sync="ingredient"
-                v-on:change="newIngredientChanged"
-                :ingredient-items="ingredients"
-                :unit-items="unitItems"/>
-            </li>
-          </ul>
-        </div>
-        <div class="directions">
-          <h2 class="ingredient-subtitle">Directions</h2>
-          <v-text-field multi-line v-model="recipe.directions" label="Directions">
-          </v-text-field>
-        </div>
+  <div class="recipe">
+    <div class="recipe-card">
+      <div class="banner">
+        <img class="main-image" :src="photoUrl"/>
       </div>
 
-      <v-card-actions>
-        <v-btn color="success" @click="save">Save</v-btn>
-      </v-card-actions>
-    </v-form>
-  </v-card>
+      <div class="body">
+        <h1 class="recipe-name">{{ recipe.recipe_name }}</h1>
+
+        <div class="field-group">
+          <label class="field-label">Catalog</label>
+          <div class="field-control">
+            <select v-model="recipe.catalog">
+              <option value="">-- Choose Catalog --</option>
+              <option v-for="catalog in catalogOptions" :catalog="catalog" :key="catalog">
+                {{ catalog }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Category</label>
+          <div class="field-control">
+            <select v-model="recipe.category">
+              <option value="">-- Choose Category --</option>
+              <option v-for="category in categoryOptions" :catalog="category"
+                      :key="category">
+                {{ category }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Vessel</label>
+          <div class="field-control">
+            <select v-model="recipe.vessel">
+              <option value="">-- Choose Vessel --</option>
+              <option v-for="vessel in vesselOptions" :vessel="vessel" :key="vessel">
+                {{ vessel }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Name</label>
+          <div class="field-control">
+            <input type="text" v-model.trim="recipe.recipe_name"/>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Summary</label>
+          <div class="field-control">
+            <input type="text" v-model.trim="recipe.description"/>
+          </div>
+        </div>
+
+        <h3 class="subtitle">Directions</h3>
+        <textarea rows="5" v-model="recipe.directions"></textarea>
+
+        <h3 class="subtitle">Ingredients</h3>
+        <ul class="ingredient-list">
+          <li class="ingredient"
+              v-for="(ingredient, index) in recipe.recipe_ingredients"
+              :ingredient="ingredient"
+              :key="index">
+
+            <editingredient
+              :ingredient.sync="ingredient"
+              :ingredient-options="ingredientOptions"
+              :unit-options="unitOptions"/>
+
+          </li>
+
+          <li class="ingredient"
+              v-for="(ingredient, index) in newIngredients"
+              :ingredient="ingredient"
+              :key="index + '-new'">
+
+            <editingredient
+              :ingredient.sync="ingredient"
+              v-on:change="newIngredientChanged"
+              :ingredient-options="ingredientOptions"
+              :unit-options="unitOptions"/>
+
+          </li>
+        </ul>
+
+        <div class="field-group">
+          <label class="field-label">Photo</label>
+          <div class="field-control">
+            <input type="file" @change="fileChosen($event)"/>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button type="submit" @click="save">Save</button>
+          <router-link :to="{ name: 'recipe', params: { id: recipe.recipe_name } }">
+            Cancel
+          </router-link>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-  .card__title{
-    padding:2rem;
-  }
-  .card-body{
-    text-align: left;
-    padding: 2rem;
-  }
-  .card__actions{
-    padding: 1rem 2rem;
-    border-top: 2px solid rgb(240, 240, 240);
-  }
-  .recipe-title{
-    font-family: "Josefin Slab", sans-serif;
-    font-weight: bold;
-    font-size: 3rem;
-    /* card title has enough padding already */
-    padding: 0;
-    line-height: 3rem;
-  }
-  .ingredient-subtitle{
-    font-family: "Josefin Slab", sans-serif;
-    padding: 1rem 0;
-  }
-  .ingredient-list{
-    list-style-type: none;
+  .recipe {
+    margin: 2rem auto;
+    max-width: 1000px;
   }
 
+  .recipe-card {
+    background-color: white;
+
+    box-shadow: 0 2px 4px rgba(180, 180, 180, 0.8);
+  }
+
+  .main-image {
+    width: 100%;
+  }
+
+  h1.recipe-name {
+    margin: 0;
+    padding: 1em 0 0 0;
+    line-height: 1em;
+  }
+
+  .body {
+    padding: 0 2rem 2rem 2rem;
+  }
+
+  .subtitle {
+    font-family: "Josefin Slab", sans-serif;
+    padding: 0;
+  }
+
+  .ingredient-list {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .ingredient {
+    padding: 0;
+    display: flex;
+    margin-bottom: 0.5rem;
+  }
+
+  textarea, input{
+    width: 100%;
+  }
+
+  .buttons{
+    margin-top: 2rem;
+  }
+
+  .field-group{}
 </style>
 
 <script>
@@ -95,9 +173,7 @@ export default {
   data() {
     return {
       recipe: {},
-      recipeUrl: 'http://localhost:4000/api/admin/recipes/',
-      ingredientsUrl: 'http://localhost:4000/api/admin/ingredients/',
-      catalogsUrl: 'http://localhost:4000/api/admin/catalogs/',
+      photoUrl: null,
       units: {
         ounce: 'oz',
         cube: 'cubes',
@@ -111,10 +187,12 @@ export default {
         tablespoon: 'tablespoons',
         teaspoon: 'teaspoons',
       },
-      unitItems: [],
-      ingredients: [],
+      unitOptions: [],
+      ingredientOptions: [],
       newIngredients: [{}],
-      catalogItems: []
+      catalogOptions: [],
+      vesselOptions: [],
+      categoryOptions: []
     };
   },
   watch: {
@@ -123,15 +201,17 @@ export default {
   created() {
     this.fetchRecipe();
     this.fetchIngredients();
-    this.unitItems = this.parseUnitItems(this.units);
-    this.catalogItems = this.fetchCatalogs();
+    this.unitOptions = this.parseUnitItems(this.units);
+    this.fetchCatalogs();
+    this.fetchCategories();
+    this.fetchVessels();
   },
   methods: {
     newIngredientChanged() {
       let emptyCount = 0;
       for (let i = this.newIngredients.length - 1; i >= 0; i--) {
         let ing = this.newIngredients[i];
-        if (!(ing.name)) {
+        if (!(ing.ingredient_name)) {
           emptyCount++;
         }
       }
@@ -141,26 +221,48 @@ export default {
     },
 
     fetchCatalogs() {
-      ApiClient.getCatalogs(
-        (response) => { this.catalogItems = response.data.data; }
+      ApiClient.getCatalogs().then(
+        (data) => {
+          this.catalogOptions = data;
+        }
+      );
+    },
+
+    fetchCategories() {
+      ApiClient.getCategories().then(
+        (data) => {
+          this.categoryOptions = data;
+        }
       );
     },
 
     fetchIngredients() {
-      ApiClient.getIngredients(
-        (response) => { this.ingredients = response.data.data; }
+      ApiClient.getIngredients().then(
+        (data) => {
+          this.ingredientOptions = data;
+        }
+      );
+    },
+
+    fetchVessels() {
+      ApiClient.getVessels().then(
+        (data) => {
+          this.vesselOptions = data;
+        }
       );
     },
 
     fetchRecipe() {
-      ApiClient.getRecipe(
-        this.$route.params.id,
-        (resp) => { this.recipe = resp.data.data; }
+      ApiClient.getRecipe(this.$route.params.id).then(
+        (data) => {
+          this.recipe = data;
+          this.photoUrl = ApiClient.recipeImageUrl(data);
+        }
       );
     },
 
     fileChosen(event) {
-      this.image = event;
+      this.image = event.target.files[0];
     },
 
     parseUnitItems(units) {
@@ -177,12 +279,15 @@ export default {
 
     save(event) {
       event.preventDefault();
+      let id = this.$route.params.id;
       let saveDoc = Object.assign({}, this.recipe);
-      saveDoc.ingredients.concat(this.newIngredients.filter(el => el.name));
-      ApiClient.putRecipe(
-        saveDoc,
-        this.image,
-        () => this.$router.push({ name: 'recipe', params: { id: this.recipe._id } })
+      let newIng = this.newIngredients;
+
+      saveDoc.recipe_ingredients = (
+        saveDoc.recipe_ingredients.concat(newIng).filter(el => el.ingredient_name)
+      );
+      ApiClient.putRecipe(id, saveDoc, this.image).then(
+        () => this.$router.push({ name: 'recipe', params: { id } })
       );
     }
   }
