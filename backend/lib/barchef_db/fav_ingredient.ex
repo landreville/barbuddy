@@ -16,3 +16,4 @@ defmodule BarchefDB.FavIngredient do
             foreign_key: :user_id, references: :user_id, define_field: false
   end
 end
+

@@ -1,20 +1,8 @@
 defimpl Poison.Encoder, for: Any do
-  require Logger
+  alias BarchefWeb.SchemaEncoder
 
   def encode(%{__struct__: _} = struct, options) do
-    map = struct
-          |> Map.from_struct
-          |> sanitize_map(unloaded_assocs(struct))
-    Poison.Encoder.Map.encode(map, options)
-  end
-
-  defp sanitize_map(map, unloaded_assocs) do
-    Map.drop(map, [:__meta__, :__struct__] ++ unloaded_assocs)
-  end
-
-  defp unloaded_assocs(struct) do
-    struct.__struct__.__schema__(:associations)
-    |> Enum.filter(&(!Ecto.assoc_loaded?(Map.get(struct, &1))))
+    SchemaEncoder.encode(struct, options)
   end
 end
 

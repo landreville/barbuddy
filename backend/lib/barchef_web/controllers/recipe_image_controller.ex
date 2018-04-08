@@ -9,7 +9,7 @@ defmodule BarchefWeb.RecipeImageController do
 
      conn
      |> put_resp_content_type(ri.mime_type)
-     |> send_resp 200, ri.image
+     |> send_resp(200, ri.image)
   end
 
   def update(conn, params) do

@@ -1,7 +1,6 @@
 defmodule BarchefDB.RecipeIngredient do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Barchef.Repo, as: Repo
 
   @primary_key false
 
@@ -23,6 +22,8 @@ defmodule BarchefDB.RecipeIngredient do
             foreign_key: :recipe_name, references: :recipe_name,
             define_field: false, on_replace: :update
   end
+
+  def exclude_fields, do: [:recipe_name]
 
   def changeset(recipe_ingredient, params \\ %{}) do
     recipe_ingredient

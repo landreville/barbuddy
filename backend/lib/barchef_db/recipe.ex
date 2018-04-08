@@ -1,4 +1,5 @@
 defmodule BarchefDB.Recipe do
+  use BarchefDB.Base
   require Logger
   use Ecto.Schema
   import Ecto.Changeset
@@ -24,6 +25,8 @@ defmodule BarchefDB.Recipe do
              BarchefDB.RecipeIngredient,
              foreign_key: :recipe_name, references: :recipe_name, on_replace: :mark_as_invalid
   end
+
+  def exclude_fields, do: [:active, :inserted_at, :photo_path]
 
   def changeset(recipe, params \\ %{}) do
     params = if recipe.recipe_name != nil do
