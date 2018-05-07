@@ -1,4 +1,5 @@
-defimpl Poison.Encoder, for: Any do
+defimpl Poison.Encoder,
+        for: [BarchefDB.Recipe, BarchefDB.Ingredient, BarchefDB.RecipeIngredient] do
   alias BarchefWeb.SchemaEncoder
 
   def encode(%{__struct__: _} = struct, options) do

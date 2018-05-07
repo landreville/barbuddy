@@ -45,7 +45,11 @@ defmodule Barchef.Mixfile do
       {:plug, "~> 1.0"},
       {:corsica, "~> 1.0"},
       {:poison, "~> 3.1"},
-      {:fastimage, "~> 1.0.0-rc2"}
+      {:fastimage, "~> 1.0.0-rc2"},
+      {:distillery, "~> 1.5", runtime: false},
+      {:guardian, "~> 1.0"},
+      {:comeonin, "~> 4.0"},
+      {:bcrypt_elixir, "~> 1.0"}
     ]
   end
 

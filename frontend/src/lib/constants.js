@@ -1,2 +1,2 @@
 
-export const appTitle = 'Build In Glass';
+export const appTitle = 'Bar Buddy';

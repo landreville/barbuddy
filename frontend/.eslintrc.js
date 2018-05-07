@@ -55,5 +55,7 @@ module.exports = {
     'no-restricted-syntax': 'off',
     'prefer-default-export': 'off',
     'import/prefer-default-export': 'off',
+    'class-methods-use-this': 'off',
+    'padded-blocks': 'off'
   }
 }

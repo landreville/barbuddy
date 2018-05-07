@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import recipes from '@/components/recipes';
 import recipe from '@/components/recipe';
 import editrecipe from '@/components/editrecipe';
+import login from '@/components/login';
 import { appTitle } from '@/lib/constants';
 
 Vue.use(Router);
@@ -27,6 +28,11 @@ const router = new Router({
       name: 'edit-recipe',
       component: editrecipe,
       props: { default: true }
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: login
     }
   ],
 });

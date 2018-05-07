@@ -25,7 +25,11 @@ config :phoenix, :format_encoders, json: Poison
 config :ecto, :json_library, Poison
 #config :poison, keys: :atoms!
 
+config :barchef, Barchef.Auth.Guardian,
+       issuer: "barchef",
+       secret_key: "a1403929JA8ZTa7b610QC+Bh444ga9eCPjL4lqhfLGvNKoR/BS5kDWOCgTitubqL"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
+

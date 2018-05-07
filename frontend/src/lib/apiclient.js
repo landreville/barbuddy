@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-export const baseUrl = 'http://localhost:4000/api';
+const BASE_URL = 'http://localhost:4000/api/';
+const AUTH_TOKEN_NAME = 'jwt';
+
 
 function sortIngredients(a, b) {
   if (a.unit === 'ounce' && b.unit !== 'ounce') {
@@ -37,35 +39,76 @@ function sortIngredients(a, b) {
   return b.amount - a.amount;
 }
 
+
+class AxiosProxy {
+
+  constructor(baseURL) {
+    this.axios = axios.create({ baseURL });
+  }
+
+  get(url) {
+    return this.axios.get(url, this.axiosConfig()).then(resp => resp.data.data);
+  }
+
+  post(url, body) {
+    return this.axios.post(url, body);
+  }
+
+  put(url, body) {
+    return this.axios.put(url, body);
+  }
+
+  axiosConfig() {
+    // Not using axios.create because the auth header value may change over time.
+    return { headers: this.makeAuthHeader() };
+  }
+
+  makeAuthHeader() {
+    let localStorage = window.localStorage;
+    let token = localStorage.getItem(AUTH_TOKEN_NAME);
+    if (token) {
+      return { Authorization: `Bearer ${token}` };
+    }
+    return {};
+  }
+
+  setAuthToken(token) {
+    let localStorage = window.localStorage;
+    localStorage.setItem(AUTH_TOKEN_NAME, token);
+  }
+}
+
+
 export default {
-  recipeBaseUrl: `${baseUrl}/recipes`,
-  ingredientsUrl: `${baseUrl}/ingredients`,
-  catalogsUrl: `${baseUrl}/catalogs`,
-  categoriesUrl: `${baseUrl}/categories`,
-  vesselsUrl: `${baseUrl}/vessels`,
+  api: new AxiosProxy(BASE_URL),
+  loginUrl: 'login',
+  recipeBaseUrl: 'recipes',
+  ingredientsUrl: 'ingredients',
+  catalogsUrl: 'catalogs',
+  categoriesUrl: 'categories',
+  vesselsUrl: 'vessels',
 
   getCatalogs() {
-    return axios.get(this.catalogsUrl).then(resp => resp.data.data);
+    return this.api.get(this.catalogsUrl);
   },
 
   getCategories() {
-    return axios.get(this.categoriesUrl).then(resp => resp.data.data);
+    return this.api.get(this.categoriesUrl);
   },
 
   getIngredients() {
-    return axios.get(this.ingredientsUrl).then(resp => resp.data.data);
+    return this.api.get(this.ingredientsUrl);
   },
 
   getVessels() {
-    return axios.get(this.vesselsUrl).then(resp => resp.data.data);
+    return this.api.get(this.vesselsUrl);
   },
 
   getRecipe(id) {
     let url = `${this.recipeBaseUrl}/${id}`;
-    return axios.get(url).then((resp) => {
-      let recipe = resp.data.data;
-      recipe.recipe_ingredients.sort(sortIngredients);
-      return recipe;
+    return this.api.get(url).then((data) => {
+      data.recipe_ingredients.sort(sortIngredients);
+      return data;
     });
   },
 
@@ -75,11 +118,27 @@ export default {
       url = `${this.recipeBaseUrl}/${view}`;
     }
 
-    return axios.get(url).then(resp => resp.data.data);
+    return this.api.get(url);
+  },
+
+  isLoggedIn() {
+    let token = window.localStorage.getItem(AUTH_TOKEN_NAME);
+    // TODO: decode token and verify ttl
+  },
+
+  login(email, password) {
+    return this.api.post(this.loginUrl, { email, password }).then((resp) => {
+      let data = resp.data.data;
+      if (data.success && data.token) {
+        this.api.setAuthToken(data.token);
+        return data.success;
+      }
+      return false;
+    });
   },
 
   putRecipe(id, recipe, image) {
-    return axios.put(`${this.recipeBaseUrl}/${id}`, recipe).then(
+    return this.api.put(`${this.recipeBaseUrl}/${id}`, recipe).then(
       (resp) => {
         if (image) {
           this.putRecipeImage(id, image);
@@ -92,10 +151,10 @@ export default {
   putRecipeImage(id, image) {
     let data = new FormData();
     data.append('image_file', image);
-    return axios.put(`${this.recipeBaseUrl}/${id}/image/main`, data);
+    return this.api.put(`${this.recipeBaseUrl}/${id}/image/main`, data);
   },
 
   recipeImageUrl(recipe) {
-    return `${baseUrl}/recipes/${recipe.recipe_name}/image/main`;
+    return `${BASE_URL}${this.recipeBaseUrl}/${recipe.recipe_name}/image/main`;
   }
 };

@@ -2,6 +2,11 @@ defmodule BarchefWeb.Router do
   use BarchefWeb, :router
   require Plug.Logger
 
+  pipeline :require_auth do
+    # TODO: Don't use Plug, write authentication checker using decode_and_verify
+
+  end
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -16,18 +21,24 @@ defmodule BarchefWeb.Router do
   end
 
   scope "/api", BarchefWeb do
-    pipe_through :api
+    pipe_through [:api]
+    post "/login", AuthController, :login
     get "/catalogs", CatalogController, :index
     get "/categories", CategoryController, :index
     get "/vessels", VesselController, :index
     get "/recipes", RecipeController, :index
     get "/recipes/:id", RecipeController, :get
     get "/recipes/:recipe_name/image/:image_type", RecipeImageController, :get
-    put "/recipes/:recipe_name/image/:image_type", RecipeImageController, :update
-    post "/recipes", RecipeController, :add
-    put "/recipes/:id", RecipeController, :update
     get "/ingredients", IngredientController, :ingredients
     get "/ingredients/:view", IngredientController, :ingredients_view
   end
+
+  scope "/api", BarchefWeb do
+    pipe_through [:api, :require_auth]
+    post "/recipes", RecipeController, :add
+    put "/recipes/:recipe_name/image/:image_type", RecipeImageController, :update
+    put "/recipes/:id", RecipeController, :update
+  end
+
 end
 
