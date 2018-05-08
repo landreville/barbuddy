@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import ApiClient from '../lib/apiclient';
+import { ApiClient } from '../lib/apiclient';
 
 export default {
   name: 'login',
@@ -35,10 +35,12 @@ export default {
       ApiClient.login(this.email, this.password).then((success) => {
         if (success) {
           console.log('Logged in');
+          this.$router.push({ name: 'recipes' });
         }
       });
-      // this.email = null;
-      // this.password = null;
+      this.email = null;
+      this.password = null;
+
     }
   }
 };

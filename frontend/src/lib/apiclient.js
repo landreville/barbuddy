@@ -1,7 +1,7 @@
 import axios from 'axios';
+import { JWS } from './jwt';
 
 const BASE_URL = 'http://localhost:4000/api/';
-const AUTH_TOKEN_NAME = 'jwt';
 
 
 function sortIngredients(a, b) {
@@ -42,20 +42,27 @@ function sortIngredients(a, b) {
 
 class AxiosProxy {
 
-  constructor(baseURL) {
+  constructor(baseURL, apiClient) {
     this.axios = axios.create({ baseURL });
+    this.apiClient = apiClient;
+    this.jws = null;
   }
 
   get(url) {
-    return this.axios.get(url, this.axiosConfig()).then(resp => resp.data.data);
+    return this.refresh().then(
+      () => this.axios.get(url, this.axiosConfig()).then(resp => resp.data.data)
+    );
   }
 
-  post(url, body) {
-    return this.axios.post(url, body);
+  post(url, body, refresh) {
+    if (refresh === false) {
+      return this.axios.post(url, body, this.axiosConfig());
+    }
+    return this.refresh().then(() => this.axios.post(url, body, this.axiosConfig()));
   }
 
   put(url, body) {
-    return this.axios.put(url, body);
+    return this.refresh().then(() => this.axios.put(url, body, this.axiosConfig()));
   }
 
   axiosConfig() {
@@ -64,45 +71,70 @@ class AxiosProxy {
   }
 
   makeAuthHeader() {
-    let localStorage = window.localStorage;
-    let token = localStorage.getItem(AUTH_TOKEN_NAME);
-    if (token) {
-      return { Authorization: `Bearer ${token}` };
+    if (this.jws) {
+      return { Authorization: `Bearer ${this.jws.accessToken}` };
     }
     return {};
   }
 
+  refresh() {
+    // Fake promise if refresh isn't necessary
+    let maybePromise = Promise.resolve(true);
+    let token = null;
+
+    if (!this.jws) {
+      token = window.localStorage.getItem('jwt');
+      if (token) {
+        this.jws = new JWS(token);
+      }
+    }
+
+    if (this.jws && !this.jws.isExpired() && this.jws.shouldRefresh()) {
+      let refreshPromise = this.apiClient.refreshAuth(this.jws.accessToken);
+      if (refreshPromise) {
+        // Real promise this time
+        maybePromise = refreshPromise;
+      }
+    }
+
+    return maybePromise;
+  }
+
   setAuthToken(token) {
-    let localStorage = window.localStorage;
-    localStorage.setItem(AUTH_TOKEN_NAME, token);
+    this.jws = new JWS(token);
+    window.localStorage.setItem('jwt', token);
   }
 }
 
 
-export default {
-  api: new AxiosProxy(BASE_URL),
-  loginUrl: 'login',
-  recipeBaseUrl: 'recipes',
-  ingredientsUrl: 'ingredients',
-  catalogsUrl: 'catalogs',
-  categoriesUrl: 'categories',
-  vesselsUrl: 'vessels',
+class ApiClientSingleton {
+  constructor() {
+    this.api = new AxiosProxy(BASE_URL, this);
+
+    this.loginUrl = 'auth/login';
+    this.refreshUrl = 'auth/refresh';
+    this.recipeBaseUrl = 'recipes';
+    this.ingredientsUrl = 'ingredients';
+    this.catalogsUrl = 'catalogs';
+    this.categoriesUrl = 'categories';
+    this.vesselsUrl = 'vessels';
+  }
 
   getCatalogs() {
     return this.api.get(this.catalogsUrl);
-  },
+  }
 
   getCategories() {
     return this.api.get(this.categoriesUrl);
-  },
+  }
 
   getIngredients() {
     return this.api.get(this.ingredientsUrl);
-  },
+  }
 
   getVessels() {
     return this.api.get(this.vesselsUrl);
-  },
+  }
 
   getRecipe(id) {
     let url = `${this.recipeBaseUrl}/${id}`;
@@ -110,21 +142,15 @@ export default {
       data.recipe_ingredients.sort(sortIngredients);
       return data;
     });
-  },
+  }
 
   getRecipes(callback, view) {
     let url = this.recipeBaseUrl;
     if (view) {
       url = `${this.recipeBaseUrl}/${view}`;
     }
-
     return this.api.get(url);
-  },
-
-  isLoggedIn() {
-    let token = window.localStorage.getItem(AUTH_TOKEN_NAME);
-    // TODO: decode token and verify ttl
-  },
+  }
 
   login(email, password) {
     return this.api.post(this.loginUrl, { email, password }).then((resp) => {
@@ -135,7 +161,7 @@ export default {
       }
       return false;
     });
-  },
+  }
 
   putRecipe(id, recipe, image) {
     return this.api.put(`${this.recipeBaseUrl}/${id}`, recipe).then(
@@ -146,15 +172,31 @@ export default {
         return resp;
       }
     );
-  },
+  }
 
   putRecipeImage(id, image) {
     let data = new FormData();
     data.append('image_file', image);
     return this.api.put(`${this.recipeBaseUrl}/${id}/image/main`, data);
-  },
+  }
 
   recipeImageUrl(recipe) {
     return `${BASE_URL}${this.recipeBaseUrl}/${recipe.recipe_name}/image/main`;
   }
-};
+
+  refreshAuth(token) {
+    return this.api.post(this.refreshUrl, { token }, false).then(
+      (resp) => {
+        let data = resp.data.data;
+        if (data.success && data.token) {
+          this.api.setAuthToken(data.token);
+          return data.success;
+        }
+        return false;
+      }
+    );
+  }
+}
+
+export const ApiClient = new ApiClientSingleton();
+

@@ -22,7 +22,8 @@ defmodule BarchefWeb.Router do
 
   scope "/api", BarchefWeb do
     pipe_through [:api]
-    post "/login", AuthController, :login
+    post "/auth/login", AuthController, :login
+    post "/auth/refresh", AuthController, :refresh
     get "/catalogs", CatalogController, :index
     get "/categories", CategoryController, :index
     get "/vessels", VesselController, :index

@@ -162,7 +162,7 @@
 </style>
 
 <script>
-import ApiClient from '../lib/apiclient';
+import { ApiClient } from '../lib/apiclient';
 import editingredient from './editingredient';
 import fileinput from './fileinput';
 

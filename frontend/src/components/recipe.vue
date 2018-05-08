@@ -86,7 +86,7 @@
 </style>
 
 <script>
-import ApiClient from '../lib/apiclient';
+import { ApiClient } from '../lib/apiclient';
 
 export default {
   props: ['id'],

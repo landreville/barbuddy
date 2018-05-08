@@ -78,7 +78,7 @@
 </style>
 
 <script>
-import ApiClient from '../lib/apiclient';
+import { ApiClient } from '../lib/apiclient';
 
 export default {
   name: 'recipes',
@@ -92,6 +92,7 @@ export default {
   },
   methods: {
     fetchRecipes() {
+      console.log(ApiClient.getRecipes);
       ApiClient.getRecipes().then((data) => { this.recipes = data; });
     },
     photoUrl(recipe) {
