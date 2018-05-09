@@ -27,12 +27,14 @@ const router = new Router({
       path: '/recipes/:id/edit',
       name: 'edit-recipe',
       component: editrecipe,
-      props: { default: true }
+      props: { default: true },
+      meta: { title: r => r.params.id }
     },
     {
       path: '/login',
       name: 'login',
-      component: login
+      component: login,
+      meta: { title: "Login" }
     }
   ],
 });
