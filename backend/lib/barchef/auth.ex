@@ -1,4 +1,4 @@
-defmodule Barchef.Auth.Auth do
+defmodule Barchef.Auth do
   alias BarchefDB.AppUser
   alias Barchef.Auth.Guardian
   alias Barchef.Repo

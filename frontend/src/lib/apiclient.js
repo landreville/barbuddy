@@ -46,6 +46,7 @@ class AxiosProxy {
     this.axios = axios.create({ baseURL });
     this.apiClient = apiClient;
     this.jws = null;
+    this.jwsFromStorage();
   }
 
   get(url) {
@@ -82,12 +83,7 @@ class AxiosProxy {
     let maybePromise = Promise.resolve(true);
     let token = null;
 
-    if (!this.jws) {
-      token = window.localStorage.getItem('jwt');
-      if (token) {
-        this.jws = new JWS(token);
-      }
-    }
+    this.jwsFromStorage();
 
     if (this.jws && !this.jws.isExpired() && this.jws.shouldRefresh()) {
       let refreshPromise = this.apiClient.refreshAuth(this.jws.accessToken);
@@ -103,6 +99,20 @@ class AxiosProxy {
   setAuthToken(token) {
     this.jws = new JWS(token);
     window.localStorage.setItem('jwt', token);
+  }
+
+  isLoggedIn() {
+    this.jwsFromStorage();
+    return this.jws && !this.jws.isExpired();
+  }
+
+  jwsFromStorage() {
+    if (!this.jws) {
+      let token = window.localStorage.getItem('jwt');
+      if (token) {
+        this.jws = new JWS(token);
+      }
+    }
   }
 }
 
@@ -150,6 +160,10 @@ class ApiClientSingleton {
       url = `${this.recipeBaseUrl}/${view}`;
     }
     return this.api.get(url);
+  }
+
+  isLoggedIn() {
+    return this.api.isLoggedIn();
   }
 
   login(email, password) {

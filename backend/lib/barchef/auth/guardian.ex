@@ -1,6 +1,6 @@
 defmodule Barchef.Auth.Guardian do
   use Guardian, otp_app: :barchef
-  alias Barchef.Auth.Auth
+  alias Barchef.Auth
 
   def subject_for_token(resource, _claims) do
     sub = to_string(resource.email)

@@ -28,7 +28,7 @@
     </div>
 
     <div class="controls">
-      <div class="edit">
+      <div class="edit" v-if="loggedIn">
         <router-link :to="{ name: 'edit-recipe', params: { id: recipe.recipe_name } }">
           Edit
         </router-link>
@@ -93,7 +93,8 @@ export default {
   data() {
     return {
       recipe: {},
-      photoUrl: null
+      photoUrl: null,
+      loggedIn: ApiClient.isLoggedIn()
     };
   },
   watch: {

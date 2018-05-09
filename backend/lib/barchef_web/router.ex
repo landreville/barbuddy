@@ -1,10 +1,11 @@
 defmodule BarchefWeb.Router do
   use BarchefWeb, :router
   require Plug.Logger
+  require Barchef.Auth.Pipeline
+
 
   pipeline :require_auth do
-    # TODO: Don't use Plug, write authentication checker using decode_and_verify
-
+    plug Barchef.Auth.Pipeline
   end
 
   pipeline :browser do

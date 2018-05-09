@@ -4,7 +4,7 @@ defmodule Barchef.Auth.Pipeline do
       error_handler: Barchef.Auth.ErrorHandler,
       module: Barchef.Auth.Guardian
 
-  plug Guardian.Plug.VerifySession, claims: %{"typ" => "access"}
-  plug Guardian.Plug.VerifyHeader, claims: %{"typ" => "access"}
-  plug Guardian.Plug.LoadResource, allow_blank: true
+  plug Guardian.Plug.VerifyHeader, claims: %{"typ" => "access", "admin" => true}
+  plug Guardian.Plug.EnsureAuthenticated
+  plug Guardian.Plug.LoadResource
 end
