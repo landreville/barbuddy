@@ -2,3 +2,4 @@
 .*/node_modules/
 backend/deps/
 backend/_build/
+backend/config/prod.secret.exs
