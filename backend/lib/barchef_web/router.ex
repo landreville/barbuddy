@@ -3,7 +3,6 @@ defmodule BarchefWeb.Router do
   require Plug.Logger
   require Barchef.Auth.Pipeline
 
-
   pipeline :require_auth do
     plug Barchef.Auth.Pipeline
   end
