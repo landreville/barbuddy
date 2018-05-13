@@ -44,10 +44,7 @@ defmodule BarBuddyWeb.RecipeImageController do
     recipe = Repo.get_by(Recipe, recipe_name: recipe_name)
     case recipe do
       %Recipe{} -> vessel_image(conn, recipe)
-      nil ->
-        Logger.info("No recipe found: #{recipe_name}")
-        conn
-        |> send_resp(404, "")
+      nil -> send_resp(conn, 404, "")
     end
   end
 
@@ -73,7 +70,6 @@ defmodule BarBuddyWeb.RecipeImageController do
     vessel_uri = case Map.fetch(vessel_images, vessel) do
       {:ok, value} -> value
       :error ->
-        Logger.info("No vessel found: #{vessel}")
         "/images/vessel/coupe.png"
     end
 

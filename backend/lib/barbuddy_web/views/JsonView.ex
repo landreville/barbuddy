@@ -1,5 +1,6 @@
 defmodule BarBuddyWeb.JsonView do
   use BarBuddyWeb, :view
+  alias BarBuddyDB.Recipe
 
   def render("data.json", %{data: data}) do
     %{"data" => data}
@@ -10,6 +11,8 @@ defmodule BarBuddyWeb.JsonView do
   end
 
   def render("recipes.json", %{recipes: recipes}) do
-    %{"data" => recipes}
+    recipes
+    |> Stream.map(&(Map.put(&1, "image_url", Recipe.image_url(&1))))
+    |> (&(%{"data" => &1})).()
   end
 end
