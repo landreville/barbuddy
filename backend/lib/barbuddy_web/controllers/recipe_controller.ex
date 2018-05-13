@@ -41,13 +41,21 @@ defmodule BarBuddyWeb.RecipeController do
     json conn, %{"data" => Repo.one(query)}
   end
 
+  def add(conn, %{"recipes" => recipes} = params) do
+    recipes
+    |> Enum.map(&(add(conn, &1)))
+    json conn, %{"data" => %{"success" => true}}
+  end
+
   def add(conn, params) do
     changeset_render(conn, Recipe.changeset(%Recipe{}, params), &Repo.insert/1)
+    json conn, %{"data" => %{"success" => true}}
   end
 
   def update(conn, params) do
     recipe = Repo.get(Recipe, params["id"])
     changeset_render(conn, Recipe.changeset(recipe, params), &Repo.update/1)
+    json conn, %{"data" => %{"success" => true}}
   end
 
   defp basic_query(query, field_atom, params) do

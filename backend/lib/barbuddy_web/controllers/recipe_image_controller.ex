@@ -45,6 +45,7 @@ defmodule BarBuddyWeb.RecipeImageController do
     case recipe do
       %Recipe{} -> vessel_image(conn, recipe)
       nil ->
+        Logger.info("No recipe found: #{recipe_name}")
         conn
         |> send_resp(404, "")
     end
@@ -52,15 +53,15 @@ defmodule BarBuddyWeb.RecipeImageController do
 
   defp vessel_image(conn, %Recipe{:vessel => vessel}) do
     vessel_images = %{
-      "Rocks" => "/image/vessel/oldfashioned.png",
-      "Cocktail" => "/image/vessel/coupe.png",
-      "Coupe" => "/image/vessel/coupe.png",
-      "Martini" => "/image/vessel/coupe.png",
-      "Highball" => "/image/vessel/highball.png",
-      "Collins" => "/image/vessel/highball.png",
-      "Snifter" => "/image/vessel/oldfashioned.png",
-      "Hurricane" => "/image/vessel/hurricane.png",
-      "Old Fashioned" => "/image/vessel/oldfashioned.png"
+      "Rocks" => "/images/vessel/oldfashioned.png",
+      "Cocktail" => "/images/vessel/coupe.png",
+      "Coupe" => "/images/vessel/coupe.png",
+      "Martini" => "/images/vessel/coupe.png",
+      "Highball" => "/images/vessel/highball.png",
+      "Collins" => "/images/vessel/highball.png",
+      "Snifter" => "/images/vessel/oldfashioned.png",
+      "Hurricane" => "/images/vessel/hurricane.png",
+      "Old Fashioned" => "/images/vessel/oldfashioned.png"
 #      "Shot" => nil,
 #      "Clear Plastic Bag" => nil,
 #      "Cordial" => nil,
@@ -71,7 +72,9 @@ defmodule BarBuddyWeb.RecipeImageController do
 
     vessel_uri = case Map.fetch(vessel_images, vessel) do
       {:ok, value} -> value
-      {:error} -> "/image/vessel/coupe.png"
+      :error ->
+        Logger.info("No vessel found: #{vessel}")
+        "/images/vessel/coupe.png"
     end
 
     redirect(conn, to: vessel_uri)
