@@ -11,8 +11,6 @@ defmodule BarBuddyWeb.JsonView do
   end
 
   def render("recipes.json", %{recipes: recipes}) do
-    recipes
-    |> Stream.map(&(Map.put(&1, "image_url", Recipe.image_url(&1))))
-    |> (&(%{"data" => &1})).()
+    %{"data" => recipes}
   end
 end

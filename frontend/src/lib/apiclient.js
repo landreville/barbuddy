@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { JWS } from './jwt';
 
-const BASE_URL = 'http://localhost:4000/api/';
+const BASE_URL = 'http://localhost:4000/';
+const API_URL = `${BASE_URL}api/`;
 
 
 function sortIngredients(a, b) {
@@ -118,7 +119,7 @@ class AxiosProxy {
 
 class ApiClientSingleton {
   constructor() {
-    this.api = new AxiosProxy(BASE_URL, this);
+    this.api = new AxiosProxy(API_URL, this);
 
     this.loginUrl = 'auth/login';
     this.refreshUrl = 'auth/refresh';
@@ -194,7 +195,10 @@ class ApiClientSingleton {
   }
 
   recipeImageUrl(recipe) {
-    return `${BASE_URL}${this.recipeBaseUrl}/${recipe.recipe_name}/image/main`;
+    if (recipe.image_url) {
+      return `${BASE_URL}${recipe.image_url}`;
+    }
+    return `${API_URL}${this.recipeBaseUrl}/${recipe.recipe_name}/image/main`;
   }
 
   refreshAuth(token) {
