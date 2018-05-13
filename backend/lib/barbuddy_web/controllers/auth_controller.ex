@@ -22,7 +22,6 @@ defmodule BarBuddyWeb.AuthController do
   end
 
   defp json_data(data, conn) do
-    # TODO: use a view that calls json and wraps with data key
-    json conn, %{"data" => data}
+    render conn, "data.json", data: data
   end
 end

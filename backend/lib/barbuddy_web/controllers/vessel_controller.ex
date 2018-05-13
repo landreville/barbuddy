@@ -8,6 +8,6 @@ defmodule BarBuddyWeb.VesselController do
     query = from item in Vessel,
       select: item.vessel,
       order_by: item.vessel
-    json conn, %{"data" => Repo.all(query)}
+    render conn, "data.json", data: Repo.all(query)
   end
 end

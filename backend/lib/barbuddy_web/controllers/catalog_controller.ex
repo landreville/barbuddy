@@ -8,6 +8,6 @@ defmodule BarBuddyWeb.CatalogController do
     query = from cat in Catalog,
       select: cat.catalog,
       order_by: cat.catalog
-    json conn, %{"data" => Repo.all(query)}
+    render conn, "data.json", data: Repo.all(query)
   end
 end

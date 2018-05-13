@@ -1,5 +1,5 @@
 defmodule BarBuddyWeb.BaseController do
-  import Phoenix.Controller, only: [json: 2]
+  import Phoenix.Controller
   require Logger
 
   def changeset_render(conn, changeset, action) do
@@ -11,7 +11,7 @@ defmodule BarBuddyWeb.BaseController do
         errors = change_errors_to_map(cs)
         json conn, %{"data" => %{"success" => false, "error" => errors}}
     end
-    json conn, %{"data" => %{"success" => false}}
+    render conn, "success.json", success: false
   end
 
   defp change_errors_to_map(%Ecto.Changeset{:errors => errors}) do

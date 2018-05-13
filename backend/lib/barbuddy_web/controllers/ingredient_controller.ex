@@ -7,6 +7,6 @@ defmodule BarBuddyWeb.IngredientController do
     query = from ing in "ingredient",
       select: ing.ingredient_name,
       order_by: ing.ingredient_name
-    json conn, %{"data" => Repo.all(query)}
+    render conn, "data.json", data: Repo.all(query)
   end
 end

@@ -6,4 +6,6 @@ defmodule BarBuddyDB.Vessel do
   schema "vessel" do
     field :vessel, :string, primary_key: true
   end
+
+
 end

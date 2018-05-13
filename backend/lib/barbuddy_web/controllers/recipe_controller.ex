@@ -28,7 +28,7 @@ defmodule BarBuddyWeb.RecipeController do
 
     recipes = Repo.all(query)
     Logger.info "#{inspect recipes}"
-    json conn, %{"data" => recipes}
+    render conn, "recipes.json", recipes: recipes
   end
 
   def get(conn, %{"id" => id}) do
@@ -38,18 +38,18 @@ defmodule BarBuddyWeb.RecipeController do
                  select: r,
                  preload: [recipe_ingredients: ri]
 
-    json conn, %{"data" => Repo.one(query)}
+    render conn, "data.json", data: Repo.one(query)
   end
 
-  def add(conn, %{"recipes" => recipes} = params) do
+  def add(conn, %{"recipes" => recipes}) do
     recipes
     |> Enum.map(&(add(conn, &1)))
-    json conn, %{"data" => %{"success" => true}}
+    render conn, "success.json", success: true
   end
 
   def add(conn, params) do
     changeset_render(conn, Recipe.changeset(%Recipe{}, params), &Repo.insert/1)
-    json conn, %{"data" => %{"success" => true}}
+    render conn, "success.json", success: true
   end
 
   def update(conn, params) do

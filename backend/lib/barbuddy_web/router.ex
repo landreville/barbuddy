@@ -18,6 +18,7 @@ defmodule BarBuddyWeb.Router do
   pipeline :api do
     plug :accepts, ["json"]
     plug Plug.Logger, log: :debug
+    plug :put_view, BarBuddyWeb.JsonView
   end
 
   scope "/api", BarBuddyWeb do

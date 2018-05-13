@@ -54,6 +54,33 @@ defmodule BarBuddyDB.Recipe do
     |> remove_recipe_ingredients
   end
 
+  def image_url(%{:vessel => vessel}) do
+    vessel_images = %{
+      "Rocks" => "/images/vessel/oldfashioned.png",
+      "Cocktail" => "/images/vessel/coupe.png",
+      "Coupe" => "/images/vessel/coupe.png",
+      "Martini" => "/images/vessel/coupe.png",
+      "Highball" => "/images/vessel/highball.png",
+      "Collins" => "/images/vessel/highball.png",
+      "Snifter" => "/images/vessel/oldfashioned.png",
+      "Hurricane" => "/images/vessel/hurricane.png",
+      "Old Fashioned" => "/images/vessel/oldfashioned.png"
+#      "Shot" => nil,
+#      "Clear Plastic Bag" => nil,
+#      "Cordial" => nil,
+#      "Goblet" => nil,
+#      "Flute" => nil,
+#      "Copper Mug" => nil
+    }
+
+    case Map.fetch(vessel_images, vessel) do
+      {:ok, value} -> value
+      :error ->
+        Logger.info("No vessel found: #{vessel}")
+        "/images/vessel/coupe.png"
+    end
+  end
+
   defp add_id_to_recipe_ingredients(params) do
     %{
       "recipe_ingredients" => old_ri,
