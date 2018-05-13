@@ -1,3 +1,3 @@
-defmodule BarchefWeb.PageViewTest do
-  use BarchefWeb.ConnCase, async: true
+defmodule BarBuddyWeb.PageViewTest do
+  use BarBuddyWeb.ConnCase, async: true
 end

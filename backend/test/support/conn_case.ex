@@ -1,4 +1,4 @@
-defmodule BarchefWeb.ConnCase do
+defmodule BarBuddyWeb.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -19,10 +19,10 @@ defmodule BarchefWeb.ConnCase do
     quote do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
-      import BarchefWeb.Router.Helpers
+      import BarBuddyWeb.Router.Helpers
 
       # The default endpoint for testing
-      @endpoint BarchefWeb.Endpoint
+      @endpoint BarBuddyWeb.Endpoint
     end
   end
 

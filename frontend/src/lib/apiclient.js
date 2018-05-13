@@ -81,7 +81,6 @@ class AxiosProxy {
   refresh() {
     // Fake promise if refresh isn't necessary
     let maybePromise = Promise.resolve(true);
-    let token = null;
 
     this.jwsFromStorage();
 

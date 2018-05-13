@@ -1,10 +1,10 @@
-defmodule Barchef.AuthTest do
-  use Barchef.DataCase
+defmodule BarBuddy.AuthTest do
+  use BarBuddy.DataCase
 
-  alias Barchef.Auth
+  alias BarBuddy.Auth
 
   describe "users" do
-    alias Barchef.Auth.User
+    alias BarBuddy.Auth.User
 
     @valid_attrs %{password: "some password", username: "some username"}
     @update_attrs %{password: "some updated password", username: "some updated username"}

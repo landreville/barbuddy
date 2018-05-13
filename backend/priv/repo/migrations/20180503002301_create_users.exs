@@ -1,4 +1,4 @@
-defmodule Barchef.Repo.Migrations.CreateUsers do
+defmodule BarBuddy.Repo.Migrations.CreateUsers do
   use Ecto.Migration
 
   def change do

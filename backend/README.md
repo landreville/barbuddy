@@ -1,4 +1,4 @@
-# Barchef
+# BarBuddy
 
 To start your Phoenix server:
 

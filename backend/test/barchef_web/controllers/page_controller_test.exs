@@ -1,5 +1,5 @@
-defmodule BarchefWeb.PageControllerTest do
-  use BarchefWeb.ConnCase
+defmodule BarBuddyWeb.PageControllerTest do
+  use BarBuddyWeb.ConnCase
 
   test "GET /", %{conn: conn} do
     conn = get conn, "/"

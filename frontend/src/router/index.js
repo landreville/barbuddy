@@ -34,7 +34,7 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: login,
-      meta: { title: "Login" }
+      meta: { title: 'Login' }
     }
   ],
 });

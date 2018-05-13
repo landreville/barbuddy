@@ -44,8 +44,8 @@ end
 # when running `mix release`, the first release in the file
 # will be used by default
 
-release :barchef do
-  set version: current_version(:barchef)
+release :barbuddy do
+  set version: current_version(:barbuddy)
   set applications: [
     :runtime_tools
   ]
