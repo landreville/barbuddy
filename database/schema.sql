@@ -96,4 +96,4 @@ create table recipe_images(
   constraint recipe_image_pk primary key (recipe_name, image_type)
 );
 
-GRANT SELECT, UPDATE, DELETE, INSERT ON ALL TABLES IN SCHEMA PUBLIC TO peacock;
+GRANT SELECT, UPDATE, DELETE, INSERT ON ALL TABLES IN SCHEMA PUBLIC TO barbuddy;
