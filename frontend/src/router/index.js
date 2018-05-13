@@ -4,6 +4,7 @@ import recipes from '@/components/recipes';
 import recipe from '@/components/recipe';
 import editrecipe from '@/components/editrecipe';
 import login from '@/components/login';
+import pantry from '@/components/pantry';
 import { appTitle } from '@/lib/constants';
 
 Vue.use(Router);
@@ -35,6 +36,12 @@ const router = new Router({
       name: 'login',
       component: login,
       meta: { title: 'Login' }
+    },
+    {
+      path: '/pantry',
+      name: 'pantry',
+      component: pantry,
+      meta: { title: 'Pantry' }
     }
   ],
 });

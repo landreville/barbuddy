@@ -56,6 +56,7 @@ module.exports = {
     'prefer-default-export': 'off',
     'import/prefer-default-export': 'off',
     'class-methods-use-this': 'off',
-    'padded-blocks': 'off'
+    'padded-blocks': 'off',
+    'no-nested-ternary': 'off'
   }
 }
