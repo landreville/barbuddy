@@ -1,20 +1,26 @@
 <template>
-  <div class="recipes">
-    <div class="card"
-         v-on:click="navigateToRecipe(recipe)"
-         v-for="recipe in recipes"
-         :recipe="recipe"
-         :key="recipe.recipe_name">
-      <div class="card__banner">
-        <img class="main-image" :src="photoUrl(recipe)"/>
-      </div>
-      <div class="card__content">
-        <div class="card__title">
-          <h2 class="title">{{ recipe.recipe_name }}</h2>
+  <div class="recipes-wrapper">
+    <div class="recipes">
+      <div class="card"
+           v-for="recipe in recipes"
+           :recipe="recipe"
+           :key="recipe.recipe_name">
+        <div class="card__banner">
+          <img class="main-image" :src="photoUrl(recipe)"/>
         </div>
-        <div class="card__body">
-          <div class="description">
-            {{ recipe.description }}
+        <div class="card__content">
+          <div class="card__title">
+            <h2 class="title">
+              <router-link class="title-link"
+                           :to="{ name: 'recipe', params: { id: recipe.recipe_name } }">
+                {{ recipe.recipe_name }}
+              </router-link>
+            </h2>
+          </div>
+          <div class="card__body">
+            <div class="description">
+              {{ recipe.description }}
+            </div>
           </div>
         </div>
       </div>
@@ -23,32 +29,32 @@
 </template>
 
 <style scoped>
+
+.recipes-wrapper{
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
 .recipes{
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: flex-start;
 }
 
 .card{
-  width: 300px;
-  margin: 1rem;
+  width: 360px;
+  max-width: 400px;
+  min-width: 120px;
 
-  border: 1px solid rgba(180, 180, 180, 0.5);
-  box-shadow: 0 2px 2px rgba(180, 180, 180, 0.8);
-
-  background-color: white;
-
-  cursor: pointer;
-}
-
-.card:hover{
-  box-shadow: 0 6px 12px rgba(180, 180, 180, 0.8);
+  margin: 2rem 1rem;
 }
 
 .card__banner{
   height:200px;
+}
+
+.card__content{
+  padding: 1rem;
 }
 
 .main-image{
@@ -57,18 +63,19 @@
 
 .title{
   font-family: "Josefin Slab", sans-serif;
+  text-align: center;
 
   font-size: 1.5rem;
   line-height: 2rem;
 
   padding: 0;
-  margin: 1rem 0 0.5rem 0;
+  margin: 0 0 0.5rem 0;
 
   color: rgb(68, 68, 68);
 }
 
-.card__content{
-  padding: 0 1rem 2rem 1rem;
+.title-link:hover{
+  text-decoration: underline;
 }
 
 .description{
@@ -97,9 +104,6 @@ export default {
     },
     photoUrl(recipe) {
       return ApiClient.recipeImageUrl(recipe);
-    },
-    navigateToRecipe(recipe) {
-      this.$router.push({ name: 'recipe', params: { id: recipe.recipe_name } });
     }
   },
 };

@@ -1,10 +1,12 @@
 <template>
   <div class="app">
-    <div class="header">
-      <div class="header__title">
-        <h1 class="title">
-          <router-link :to="{ name: 'recipes' }">{{ title }}</router-link>
-        </h1>
+    <div class="header-top">
+      <div class="header">
+        <div class="header__title">
+          <h1 class="title">
+            <router-link :to="{ name: 'recipes' }">{{ title }}</router-link>
+          </h1>
+        </div>
       </div>
     </div>
     <router-view></router-view>
@@ -29,14 +31,21 @@ export default {
 <style>
 @import 'assets/css/bundle.css';
 
+.header-top{
+  width: 100%;
+  border-bottom: 3px double black;
+  margin-bottom: 1rem;
+}
+
 .header{
   margin: 0 auto;
   text-align: center;
-  height: 8rem;
+  /*height: 6rem;*/
   color: rgb(68, 68, 68);
 
   max-width: 1000px;
 }
+
 .title{
   font-family: "Josefin Sans", sans-serif;
   font-weight: bold;
@@ -44,7 +53,7 @@ export default {
   line-height: 4rem;
 
   margin: 0;
-  padding: 2rem 0
+  padding: 1rem 0
 }
 
 .title a{
