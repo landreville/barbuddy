@@ -71,6 +71,10 @@
   padding: 0;
   margin: 0 0 0.5rem 0;
 
+  color: rgb(75, 75, 75);
+}
+
+.title-link{
   color: rgb(68, 68, 68);
 }
 
