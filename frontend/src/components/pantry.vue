@@ -20,6 +20,7 @@
         <div class="list-item__title">
           {{ ing.ingredientName }}
         </div>
+        <!-- TODO: Allow removing items -->
       </div>
     </div>
 </template>

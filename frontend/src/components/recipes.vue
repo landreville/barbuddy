@@ -1,6 +1,8 @@
 <template>
+  <!-- TODO: Search recipes -->
   <div class="recipes-wrapper">
     <div class="recipes">
+      <!-- TODO: Move recipe cards to their own component -->
       <div class="card"
            v-for="recipe in recipes"
            :recipe="recipe"
