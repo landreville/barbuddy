@@ -11,7 +11,7 @@
       <nav>
         <div class="navitem">
           <router-link class="navlink"
-                       :class="{ active: $route.name === 'recipes'}"
+                       :class="{ active: ['recipes', 'recipe', 'edit-recipe'].indexOf($route.name) != -1}"
                        :to="{ name: 'recipes' }">Recipes</router-link>
         </div>
         <div class="navitem">
