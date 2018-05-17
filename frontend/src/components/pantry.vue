@@ -16,9 +16,9 @@
       </div>
 
       <div class="list-item"
-           v-for="ing in pantryItems" :key="ing.ingredientName" :ing="ing">
+           v-for="ing in pantryItems" :key="ing" :ing="ing">
         <div class="list-item__title">
-          {{ ing.ingredientName }}
+          {{ ing }}
         </div>
         <!-- TODO: Allow removing items -->
       </div>
@@ -32,14 +32,11 @@ export default {
   name: 'pantry',
   created() {
     this.fetchIngredients();
+    this.fetchPantry();
   },
   data() {
     return {
-      pantryItems: [
-        { ingredientName: 'Angostura Bitters' },
-        { ingredientName: 'Bourbon' },
-        { ingredientName: 'Sweet Vermouth' }
-      ],
+      pantryItems: [],
       newPantryItem: null,
       ingredientOptions: []
     };
@@ -47,19 +44,26 @@ export default {
   methods: {
     addIngredient() {
       for (let i = 0; i < this.pantryItems.length; i++) {
-        if (this.pantryItems[i].ingredientName === this.newPantryItem) {
+        if (this.pantryItems[i] === this.newPantryItem) {
           this.newPantryItem = null;
           return;
         }
       }
-
-      this.pantryItems.push({ ingredientName: this.newPantryItem });
-      this.pantryItems.sort((a, b) =>
-        (a.ingredientName < b.ingredientName
-          ? -1 : (a.ingredientName > b.ingredientName) ? 1 : 0)
-      );
-
+      if (this.newPantryItem) {
+        this.pantryItems.push(this.newPantryItem);
+        this.pantryItems.sort();
+        this.savePantry();
+      }
       this.newPantryItem = null;
+    },
+    savePantry() {
+      window.localStorage.setItem('pantry', JSON.stringify(this.pantryItems));
+    },
+    fetchPantry() {
+      let pantryItems = window.localStorage.getItem('pantry');
+      if (pantryItems) {
+        this.pantryItems = JSON.parse(pantryItems);
+      }
     },
     fetchIngredients() {
       ApiClient.getIngredients().then(
