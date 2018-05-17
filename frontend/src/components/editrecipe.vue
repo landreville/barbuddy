@@ -219,7 +219,6 @@ export default {
         this.newIngredients.push({});
       }
     },
-
     fetchCatalogs() {
       ApiClient.getCatalogs().then(
         (data) => {
@@ -287,6 +286,7 @@ export default {
         saveDoc.recipe_ingredients.concat(newIng).filter(el => el.ingredient_name)
       );
       ApiClient.putRecipe(id, saveDoc, this.image).then(
+        // TODO: check that save worked
         () => this.$router.push({ name: 'recipe', params: { id } })
       );
     }
