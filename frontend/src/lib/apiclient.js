@@ -61,7 +61,7 @@ class AxiosProxy {
             for (let i = 0; i < value.length; i++) {
               let arrayValue = value[i];
               if (arrayValue) {
-                params.append(key, arrayValue);
+                params.append(`${key}[]`, arrayValue);
               }
             }
           } else {

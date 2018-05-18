@@ -2,13 +2,14 @@ defmodule BarBuddyWeb.RecipeController do
   use BarBuddyWeb, :controller
   alias BarBuddyDB.Recipe
   alias BarBuddyDB.RecipeIngredient
+  alias BarBuddyDB.Ingredient
+  alias BarBuddyDB.Substitute
   alias BarBuddy.Repo
   import Ecto.Query
 
   def index(conn, params) do
     query = from r in Recipe,
                  join: ri in assoc(r, :recipe_ingredients),
-                 on: r.recipe_name == ri.recipe_name,
                  select: r,
                  preload: [
                    recipe_ingredients: ri
@@ -76,16 +77,21 @@ defmodule BarBuddyWeb.RecipeController do
       [ings]
     end
 
-    riq = Enum.reduce(
-      ing_names,
-      from(ri in RecipeIngredient),
-      &(where(&2, [ri], ri.ingredient_name == ^&1))
-    )
-    
-    riq
-    |> select([ri], ri.recipe_name)
-    |> group_by([ri], ri.recipe_name)
-    |> having([ri], count(ri.recipe_name) == ^length(ing_names))
+    riq = from ri in RecipeIngredient,
+      join: ing in assoc(ri, :ingredient),
+      left_join: sub in assoc(ing, :substitutes),
+      left_join: parent_ing in Ingredient,
+      on: ing.parent_ingredient_name == parent_ing.ingredient_name,
+      left_join: child_ing in Ingredient,
+      on: parent_ing.ingredient_name == child_ing.ingredient_name
+          and child_ing.ingredient_name != ing.ingredient_name,
+      where: ri.ingredient_name in ^ing_names
+        or parent_ing.ingredient_name in ^ing_names
+        or child_ing.ingredient_name in ^ing_names
+        or sub.sub_ingredient_name in ^ing_names,
+      group_by: ri.recipe_name,
+      having: count(fragment("distinct ?", ri.ingredient_name)) == ^length(ing_names),
+      select: ri.recipe_name
 
     join(query, :inner, [r], ri in subquery(riq), ri.recipe_name == r.recipe_name)
   end

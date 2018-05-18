@@ -1,8 +1,9 @@
 <template>
   <div class="search">
     <div class="search-fields">
+      <form>
       <div class="search-field">
-        <input class="search-input basic" type="text"
+        <input class="search-input basic" type="text" ref="searchInput"
                placeholder="Search..."
                v-model="searchQuery"
                @change="change"/>
@@ -23,8 +24,11 @@
         </label>
       </div>
       <div class="search-field">
-        <button class="search-button" @click="submit">Search</button>
+        <button type="submit" class="search-button" @click.prevent="submit">
+          Search
+        </button>
       </div>
+      </form>
     </div>
   </div>
 </template>
@@ -38,6 +42,9 @@ export default {
   components: { Multiselect },
   created() {
     this.fetchIngredients();
+  },
+  mounted() {
+    this.$refs.searchInput.focus();
   },
   data() {
     return {
