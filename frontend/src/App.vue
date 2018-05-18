@@ -1,7 +1,9 @@
 <template>
   <div class="app">
     <app-header :title="title"></app-header>
-    <router-view></router-view>
+    <div class="body">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -20,6 +22,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 @import 'assets/css/bundle.css';
+
+.app{
+  display: grid;
+}
 </style>

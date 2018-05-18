@@ -1,27 +1,25 @@
 <template>
-  <div class="header-top">
     <header>
-      <div class="header__title">
+      <div class="header-title">
         <h1 class="title">
           <router-link :to="{ name: 'recipes' }">{{ title }}</router-link>
         </h1>
       </div>
+      <div class="nav-container">
+        <nav>
+          <div class="nav-item">
+            <router-link class="navlink"
+                         :class="{ active: ['recipes', 'recipe', 'edit-recipe'].indexOf($route.name) != -1}"
+                         :to="{ name: 'recipes' }">Recipes</router-link>
+          </div>
+          <div class="nav-item">
+            <router-link class="navlink"
+                         :class="{ active: $route.name === 'pantry'}"
+                         :to="{ name: 'pantry' }">Pantry</router-link>
+          </div>
+        </nav>
+      </div>
     </header>
-    <div class="navcontainer">
-      <nav>
-        <div class="navitem">
-          <router-link class="navlink"
-                       :class="{ active: ['recipes', 'recipe', 'edit-recipe'].indexOf($route.name) != -1}"
-                       :to="{ name: 'recipes' }">Recipes</router-link>
-        </div>
-        <div class="navitem">
-          <router-link class="navlink"
-                       :class="{ active: $route.name === 'pantry'}"
-                       :to="{ name: 'pantry' }">Pantry</router-link>
-        </div>
-      </nav>
-    </div>
-  </div>
 </template>
 
 <script>
@@ -32,18 +30,16 @@ export default {
 </script>
 
 <style scoped>
-.header-top{
+header{
   width: 100%;
   margin-bottom: 1rem;
 }
 
-header{
+.header-title{
   margin: 0 auto;
   text-align: center;
   /*height: 6rem;*/
   color: rgb(68, 68, 68);
-
-  max-width: 1000px;
 }
 
 .title{
@@ -63,7 +59,7 @@ header{
 }
 
 
-.navcontainer{
+.nav-container{
   border-top: 3px double rgb(68, 68, 68);
   border-bottom: 3px double rgb(68, 68, 68);
 }
@@ -72,11 +68,9 @@ nav{
   margin: 0 auto;
   max-width: 600px;
   display: flex;
-
-
 }
 
-.navitem{
+.nav-item{
   line-height: 1em;
   margin: 0.5rem 1rem;
 }

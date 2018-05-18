@@ -1,6 +1,7 @@
 <template>
-  <!-- TODO: Search recipes -->
   <div class="recipes-wrapper">
+    <recipe-search @submit="search"></recipe-search>
+
     <div class="recipes">
       <!-- TODO: Move recipe cards to their own component -->
       <div class="card"
@@ -87,14 +88,17 @@
 .description{
   line-height: 1.5rem;
   color: rgb(120, 120, 120);
+  text-align: center;
 }
 </style>
 
 <script>
 import { ApiClient } from '../lib/apiclient';
+import recipesearch from './recipe-search';
 
 export default {
   name: 'recipes',
+  components: { 'recipe-search': recipesearch },
   created() {
     this.fetchRecipes();
   },
@@ -110,6 +114,9 @@ export default {
     },
     photoUrl(recipe) {
       return ApiClient.recipeImageUrl(recipe);
+    },
+    search(searchQuery) {
+      ApiClient.getRecipes(searchQuery).then((data) => { this.recipes = data; });
     }
   },
 };

@@ -63,6 +63,7 @@ create table appuser (
   password    varchar not null check (password != ''),
   info        jsonb   not null    default '{}',
   preferences jsonb   not null    default '{}',
+  pantry jsonb not null default '[]',
   admin boolean not null default false
 );
 

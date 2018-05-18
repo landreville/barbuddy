@@ -50,9 +50,32 @@ class AxiosProxy {
     this.jwsFromStorage();
   }
 
-  get(url) {
+  get(url, query) {
+    let getUrl = url;
+    if (query) {
+      let params = new URLSearchParams();
+      for (let key in query) {
+        if (query.hasOwnProperty(key)) {
+          let value = query[key];
+          if (Array.isArray(value)) {
+            for (let i = 0; i < value.length; i++) {
+              let arrayValue = value[i];
+              if (arrayValue) {
+                params.append(key, arrayValue);
+              }
+            }
+          } else {
+            if (value) {
+              params.append(key, value);
+            }
+          }
+        }
+      }
+      getUrl = `${getUrl}?${params.toString()}`;
+    }
+
     return this.refresh().then(
-      () => this.axios.get(url, this.axiosConfig()).then(resp => resp.data.data)
+      () => this.axios.get(getUrl, this.axiosConfig()).then(resp => resp.data.data)
     );
   }
 
@@ -154,12 +177,8 @@ class ApiClientSingleton {
     });
   }
 
-  getRecipes(callback, view) {
-    let url = this.recipeBaseUrl;
-    if (view) {
-      url = `${this.recipeBaseUrl}/${view}`;
-    }
-    return this.api.get(url);
+  getRecipes(query) {
+    return this.api.get(this.recipeBaseUrl, query);
   }
 
   isLoggedIn() {

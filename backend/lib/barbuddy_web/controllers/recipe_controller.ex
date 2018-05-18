@@ -14,20 +14,17 @@ defmodule BarBuddyWeb.RecipeController do
                    recipe_ingredients: ri
                  ]
 
-    # Basic querying
-    basic_fields = [:catalog, :category, :vessel]
-    query = Enum.reduce(
-      basic_fields,
-      query,
-      &(basic_query(&2, &1, params))
-    )
+    query = case params do
+      %{"q" => q} -> basic_query(query, q)
+      _ -> query
+    end
+
     query = case params do
       %{"ingredient" => ings} -> query_ingredients(query, ings)
       _ -> query
     end
 
     recipes = Repo.all(query)
-    Logger.info "#{inspect recipes}"
     render conn, "recipes.json", recipes: recipes
   end
 
@@ -58,13 +55,18 @@ defmodule BarBuddyWeb.RecipeController do
     json conn, %{"data" => %{"success" => true}}
   end
 
-  defp basic_query(query, field_atom, params) do
+  defp exact_query(query, field_atom, params) do
     field_str = Atom.to_string(field_atom)
     case params do
       %{^field_str => value} ->
         where(query, [ri], field(ri, ^field_atom) == ^value)
       _ -> query
     end
+  end
+
+  defp basic_query(query, q) do
+    like_q = "%#{q}%"
+    where(query, [r], ilike(r.recipe_name, ^like_q))
   end
 
   defp query_ingredients(query, ings) do
@@ -79,6 +81,7 @@ defmodule BarBuddyWeb.RecipeController do
       from(ri in RecipeIngredient),
       &(where(&2, [ri], ri.ingredient_name == ^&1))
     )
+    
     riq
     |> select([ri], ri.recipe_name)
     |> group_by([ri], ri.recipe_name)
