@@ -6,7 +6,7 @@
       <div class="search-field">
         <input class="search-input basic" type="text" ref="searchInput"
                placeholder="Search..."
-               v-model="searchQuery"
+               v-model="q"
                @change="change"/>
       </div>
       <div class="search-field">
@@ -40,6 +40,7 @@
 <script>
 import Multiselect from 'vue-multiselect';
 import { ApiClient } from '../lib/apiclient';
+import { store } from '../lib/store';
 
 export default {
   name: 'recipe-search',
@@ -49,13 +50,25 @@ export default {
   },
   mounted() {
     this.$refs.searchInput.focus();
+
+    let savedSearch = store.data.search;
+    if (savedSearch.q) {
+      this.q = savedSearch.q;
+    }
+    if (savedSearch.pantry) {
+      this.inPantry = true;
+    }
+    if (savedSearch.ingredients) {
+      this.ingredients = savedSearch.ingredients;
+    }
   },
   data() {
     return {
       ingredientOptions: [],
       ingredients: null,
       inPantry: false,
-      searchQuery: null
+      q: null,
+      searchQuery: store.data.search
     };
   },
   methods: {
@@ -68,18 +81,13 @@ export default {
     },
     buildSearch() {
       let searchQuery = {
-        q: this.searchQuery,
+        q: this.q,
         ingredient: this.ingredients
       };
       if (this.inPantry) {
-        let pantryItems = window.localStorage.getItem('pantry');
-        if (pantryItems) {
-          console.log(pantryItems);
-          pantryItems = JSON.parse(pantryItems);
-          searchQuery.pantry = pantryItems;
-
-        }
+        searchQuery.pantry = store.data.pantryItems;
       }
+      store.setSearch(searchQuery);
       return searchQuery;
     },
     change() {
@@ -91,7 +99,8 @@ export default {
     reset() {
       this.ingredients = null;
       this.inPantry = false;
-      this.searchQuery = null;
+      this.q = null;
+      store.setSearch({});
       this.$emit('submit', this.buildSearch());
     }
   }

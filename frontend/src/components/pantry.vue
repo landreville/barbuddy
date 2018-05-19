@@ -21,7 +21,10 @@
           <div class="list-item__title">
             {{ ing }}
           </div>
-          <!-- TODO: Allow removing items -->
+          <div class="remove-btn">
+            <button @click="removeIngredient(ing)">X</button>
+          </div>
+
         </div>
       </div>
     </div>
@@ -29,44 +32,38 @@
 
 <script>
 import { ApiClient } from '../lib/apiclient';
+import { store } from '../lib/store';
 
 export default {
   name: 'pantry',
   created() {
     this.fetchIngredients();
-    this.fetchPantry();
   },
   data() {
     return {
-      pantryItems: [],
+      pantryItems: store.data.pantryItems,
       newPantryItem: null,
       ingredientOptions: []
     };
   },
   methods: {
     addIngredient() {
-      for (let i = 0; i < this.pantryItems.length; i++) {
-        if (this.pantryItems[i] === this.newPantryItem) {
+      for (let i = 0; i < store.data.pantryItems.length; i++) {
+        if (store.data.pantryItems[i] === this.newPantryItem) {
           this.newPantryItem = null;
           return;
         }
       }
       if (this.newPantryItem) {
-        this.pantryItems.push(this.newPantryItem);
-        this.pantryItems.sort();
-        this.savePantry();
+        store.addPantryItem(this.newPantryItem);
       }
       this.newPantryItem = null;
+
+      this.$emit('changed', store.data.pantryItems);
     },
-    savePantry() {
-      console.log(this.pantryItems);
-      window.localStorage.setItem('pantry', JSON.stringify(this.pantryItems));
-    },
-    fetchPantry() {
-      let pantryItems = window.localStorage.getItem('pantry');
-      if (pantryItems) {
-        this.pantryItems = JSON.parse(pantryItems);
-      }
+    removeIngredient(pantryItem) {
+      store.removePantryItem(pantryItem);
+      this.$emit('changed', store.data.pantryItems);
     },
     fetchIngredients() {
       ApiClient.getIngredients().then(
@@ -92,32 +89,30 @@ export default {
   width: 100%;
   max-width: 800px;
   padding: 0.5rem 1rem;
-
-  border-bottom: 1px solid rgba(180, 180, 180, 0.5);
-}
-
-
-.list-item.controls{
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid rgba(180, 180, 180, 0.5);
 }
 
 h2{
   margin-left: 1rem;
 }
 
-
-
-.ingredient-select{
-
-}
-
-button{
+.add-btn > button{
   font-family: "Raleway", sans-serif;
   font-size: 0.75rem;
   padding: 0 0.25rem;
+  cursor: pointer;
+  width: 100%;
+  margin-left: 0.5rem;
+}
+
+.remove-btn > button{
+  font-family: "Raleway", sans-serif;
+  font-size: 0.5rem;
+  padding: 0 0rem;
   cursor: pointer;
   width: 100%;
   margin-left: 0.5rem;

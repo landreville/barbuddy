@@ -3,7 +3,7 @@
     <app-header :title="title"></app-header>
     <div class="sidebar">
       <recipe-search @submit="search"></recipe-search>
-      <ingredient-pantry></ingredient-pantry>
+      <ingredient-pantry @changed="pantryChanged"></ingredient-pantry>
     </div>
     <div class="body">
       <router-view></router-view>
@@ -27,6 +27,7 @@ export default {
     'ingredient-pantry': pantry
   },
   created() {
+    store.load();
     this.fetchRecipes();
   },
   data() {
@@ -37,12 +38,28 @@ export default {
   },
   methods: {
     fetchRecipes() {
-      ApiClient.getRecipes().then(data => store.setRecipes(data));
-    },
+      // Check if search object is empty ( I sure do like Javascript :S )
 
+      if (Object.keys(store.data.search).length === 0 && store.data.search.constructor === Object) {
+        ApiClient.getRecipes().then(data => store.setRecipes(data));
+      } else {
+        this.search(store.data.search);
+      }
+    },
     search(searchQuery) {
-      store.setSearch(searchQuery);
-      ApiClient.getRecipes(searchQuery).then(data => store.setRecipes(data));
+      if (searchQuery.pantry && searchQuery.pantry.length === 0) {
+        console.log('No results due to empty pantry.');
+        store.setRecipes([]);
+      } else {
+        ApiClient.getRecipes(searchQuery).then(data => store.setRecipes(data));
+      }
+    },
+    pantryChanged() {
+      console.log('Pantry changed');
+      if (store.data.search.hasOwnProperty('pantry')) {
+        console.log('Re-searching due to pantry change.');
+        this.search(store.data.search);
+      }
     }
   },
 };
