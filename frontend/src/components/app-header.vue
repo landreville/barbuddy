@@ -32,7 +32,6 @@ export default {
 <style scoped>
 header{
   width: 100%;
-  margin-bottom: 1rem;
 }
 
 .header-title{
@@ -60,8 +59,8 @@ header{
 
 
 .nav-container{
-  border-top: 3px double rgb(68, 68, 68);
-  border-bottom: 3px double rgb(68, 68, 68);
+  border-top: 3px double rgb(200, 200, 200);
+  border-bottom: 3px double rgb(200, 200, 200);
 }
 
 nav{

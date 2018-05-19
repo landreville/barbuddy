@@ -49,7 +49,7 @@ export default {
   display: grid;
 
   grid-template-columns: repeat(4, 1fr);
-  grid-gap: 1rem;
+  grid-gap: 0;
   grid-auto-rows: 1fr auto;
 }
 
@@ -61,6 +61,8 @@ header{
 .sidebar{
   grid-column: 1;
   grid-row: 2;
+
+  border-right: 1px solid rgb(200, 200, 200);
 }
 
 .body{
