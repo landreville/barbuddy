@@ -1,5 +1,6 @@
 <template>
-  <div class="search">
+  <div class="recipe-search">
+    <h2>Filter Recipes</h2>
     <div class="search-fields">
       <form>
       <div class="search-field">
@@ -23,9 +24,12 @@
           Recipes I can make
         </label>
       </div>
-      <div class="search-field">
-        <button type="submit" class="search-button" @click.prevent="submit">
+      <div class="search-field search-buttons">
+        <button type="submit" class="search-button submit" @click.prevent="submit">
           Search
+        </button>
+        <button type="reset" class="search-button reset" @click.prevent="reset">
+          Clear
         </button>
       </div>
       </form>
@@ -76,13 +80,18 @@ export default {
 
         }
       }
-
       return searchQuery;
     },
     change() {
       this.$emit('change', this.buildSearch());
     },
     submit() {
+      this.$emit('submit', this.buildSearch());
+    },
+    reset() {
+      this.ingredients = null;
+      this.inPantry = false;
+      this.searchQuery = null;
       this.$emit('submit', this.buildSearch());
     }
   }
@@ -93,7 +102,11 @@ export default {
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style>
 
-.search{
+h2{
+  margin-left: 1rem;
+}
+
+.recipe-search{
   width: 100%;
 }
 
@@ -114,18 +127,33 @@ export default {
   width: 100%;
 
   font-family: inherit;
-  font-size: 1rem;
+}
+
+.search-buttons{
+  display:flex;
+  justify-content: space-between;
 }
 
 .search-button{
   font-family: "Raleway", sans-serif;
-  font-size: 1rem;
+  font-size: 0.75rem;
+  padding: 0 1rem;
   cursor: pointer;
+  width: 100%;
+
+}
+
+.search-button.submit{
+  margin-right: 0.5rem;
+}
+
+.search-button.reset{
+  margin-left: 0.5rem;
 }
 
 .checkbox-label{
   color: #9EA0A3;
-  font-size: 1.5rem;
+  font-size: 1rem;
   user-select: none;
 }
 
@@ -139,8 +167,7 @@ export default {
 
 .basic{
   font-family: "Raleway", sans-serif;
-  height: 3rem;
-  font-size: 1.5rem;
+  font-size: 1rem;
 
   border: 1px solid #a8a8a8;
   border-radius: 5px;
@@ -154,17 +181,21 @@ export default {
 }
 
 .multiselect__single{
-  font-size: 1.5rem;
-  line-height: 2rem;
+  padding-top: 0.25rem;
+  font-size: 1rem;
+  /*line-height: 1rem;*/
   color: #9EA0A3;
 }
 
 .multiselect__select{
-  line-height: 1.5rem;
+  line-height: 1rem;
 }
 
 .multiselect__tag{
   font-family: "Raleway", sans-serif;
-  font-size: 1.5rem;
+}
+
+.multiselect__tags-wrap{
+  line-height: 1rem;
 }
 </style>

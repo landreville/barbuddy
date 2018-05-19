@@ -43,7 +43,7 @@
 }
 
 .card{
-  width: 360px;
+  width: 320px;
   max-width: 400px;
   min-width: 120px;
 

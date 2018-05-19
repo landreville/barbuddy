@@ -3,6 +3,7 @@
     <app-header :title="title"></app-header>
     <div class="sidebar">
       <recipe-search @submit="search"></recipe-search>
+      <ingredient-pantry></ingredient-pantry>
     </div>
     <div class="body">
       <router-view></router-view>
@@ -16,10 +17,15 @@ import { ApiClient } from './lib/apiclient';
 import { store } from './lib/store';
 import appheader from './components/app-header';
 import recipesearch from './components/recipe-search';
+import pantry from './components/pantry';
 
 export default {
   name: 'barchef-app',
-  components: { 'app-header': appheader, 'recipe-search': recipesearch },
+  components: {
+    'app-header': appheader,
+    'recipe-search': recipesearch,
+    'ingredient-pantry': pantry
+  },
   created() {
     this.fetchRecipes();
   },
@@ -63,6 +69,14 @@ header{
   grid-row: 2;
 
   border-right: 1px solid rgb(200, 200, 200);
+}
+
+.recipe-search{
+  border-bottom: 1px solid rgb(200, 200, 200);
+}
+
+.pantry{
+  margin-top: 1rem;
 }
 
 .body{

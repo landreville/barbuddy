@@ -1,26 +1,28 @@
 <template>
-    <div class="pantry list">
+    <div class="pantry">
+      <h2>Pantry Items</h2>
+      <div class="list">
+        <div class="list-item controls">
+          <div class="ingredient-select">
+            <select v-model="newPantryItem">
+              <option :value="null">-- Add Pantry Item --</option>
+              <option v-for="opt in ingredientOptions" :key="opt" :opt="opt">
+                {{ opt }}
+              </option>
+            </select>
+          </div>
+          <div class="add-btn">
+            <button @click="addIngredient">Add</button>
+          </div>
+        </div>
 
-      <div class="list-item controls">
-        <div class="ingredient-select">
-          <select v-model="newPantryItem">
-            <option :value="null">-- Add Pantry Item --</option>
-            <option v-for="opt in ingredientOptions" :key="opt" :opt="opt">
-              {{ opt }}
-            </option>
-          </select>
+        <div class="list-item"
+             v-for="ing in pantryItems" :key="ing" :ing="ing">
+          <div class="list-item__title">
+            {{ ing }}
+          </div>
+          <!-- TODO: Allow removing items -->
         </div>
-        <div class="add-btn">
-          <button @click="addIngredient">Add</button>
-        </div>
-      </div>
-
-      <div class="list-item"
-           v-for="ing in pantryItems" :key="ing" :ing="ing">
-        <div class="list-item__title">
-          {{ ing }}
-        </div>
-        <!-- TODO: Allow removing items -->
       </div>
     </div>
 </template>
@@ -89,19 +91,35 @@ export default {
   background-color: #FFFFFF;
   width: 100%;
   max-width: 800px;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
 
   border-bottom: 1px solid rgba(180, 180, 180, 0.5);
 }
 
-.list-item:last-child{
-  border-bottom: none;
-}
 
 .list-item.controls{
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+
+h2{
+  margin-left: 1rem;
+}
+
+
+
+.ingredient-select{
+
+}
+
+button{
+  font-family: "Raleway", sans-serif;
+  font-size: 0.75rem;
+  padding: 0 0.25rem;
+  cursor: pointer;
+  width: 100%;
+  margin-left: 0.5rem;
 }
 </style>
