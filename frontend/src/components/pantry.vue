@@ -57,6 +57,7 @@ export default {
       this.newPantryItem = null;
     },
     savePantry() {
+      console.log(this.pantryItems);
       window.localStorage.setItem('pantry', JSON.stringify(this.pantryItems));
     },
     fetchPantry() {

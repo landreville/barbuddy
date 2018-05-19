@@ -64,10 +64,8 @@ class AxiosProxy {
                 params.append(`${key}[]`, arrayValue);
               }
             }
-          } else {
-            if (value) {
-              params.append(key, value);
-            }
+          } else if (value) {
+            params.append(key, value);
           }
         }
       }

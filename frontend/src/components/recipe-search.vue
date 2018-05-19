@@ -63,11 +63,21 @@ export default {
       );
     },
     buildSearch() {
-      return {
+      let searchQuery = {
         q: this.searchQuery,
-        inPantry: this.inPantry,
         ingredient: this.ingredients
       };
+      if (this.inPantry) {
+        let pantryItems = window.localStorage.getItem('pantry');
+        if (pantryItems) {
+          console.log(pantryItems);
+          pantryItems = JSON.parse(pantryItems);
+          searchQuery.pantry = pantryItems;
+
+        }
+      }
+
+      return searchQuery;
     },
     change() {
       this.$emit('change', this.buildSearch());

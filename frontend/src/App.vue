@@ -22,7 +22,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 @import 'assets/css/bundle.css';
 
 .app{
