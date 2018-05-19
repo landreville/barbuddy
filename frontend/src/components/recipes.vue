@@ -1,11 +1,9 @@
 <template>
   <div class="recipes-wrapper">
-    <recipe-search @submit="search"></recipe-search>
-
     <div class="recipes">
       <!-- TODO: Move recipe cards to their own component -->
       <div class="card"
-           v-for="recipe in recipes"
+           v-for="recipe in store.recipes"
            :recipe="recipe"
            :key="recipe.recipe_name">
         <div class="card__banner">
@@ -93,31 +91,22 @@
 </style>
 
 <script>
-import { ApiClient } from '../lib/apiclient';
 import recipesearch from './recipe-search';
+import { ApiClient } from '../lib/apiclient';
+import { store } from '../lib/store';
 
 export default {
   name: 'recipes',
   components: { 'recipe-search': recipesearch },
-  created() {
-    this.fetchRecipes();
-  },
   data() {
     return {
-      recipes: [],
+      store: store.data
     };
   },
   methods: {
-    fetchRecipes() {
-      console.log(ApiClient.getRecipes);
-      ApiClient.getRecipes().then((data) => { this.recipes = data; });
-    },
     photoUrl(recipe) {
       return ApiClient.recipeImageUrl(recipe);
-    },
-    search(searchQuery) {
-      ApiClient.getRecipes(searchQuery).then((data) => { this.recipes = data; });
     }
-  },
+  }
 };
 </script>
