@@ -12,11 +12,6 @@
                          :class="{ active: ['recipes', 'recipe', 'edit-recipe'].indexOf($route.name) != -1}"
                          :to="{ name: 'recipes' }">Recipes</router-link>
           </div>
-          <div class="nav-item">
-            <router-link class="navlink"
-                         :class="{ active: $route.name === 'pantry'}"
-                         :to="{ name: 'pantry' }">Pantry</router-link>
-          </div>
         </nav>
       </div>
     </header>
@@ -78,6 +73,6 @@ nav{
   color: rgb(68, 68, 68);
 }
 .navlink.active{
-  text-decoration: underline;
+  /*text-decoration: underline;*/
 }
 </style>

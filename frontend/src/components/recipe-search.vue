@@ -109,10 +109,12 @@ export default {
 
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+// Can't be scoped style due to multi-select overrides
 <style>
 
-h2{
+.recipe-search h2{
   margin-left: 1rem;
+  margin-bottom: 1rem;
 }
 
 .recipe-search{
@@ -120,9 +122,6 @@ h2{
 }
 
 .search-fields{
-  max-width: 600px;
-  margin: 1rem auto;
-
   display: flex;
   flex-direction: column;
 }
@@ -160,21 +159,21 @@ h2{
   margin-left: 0.5rem;
 }
 
-.checkbox-label{
+.recipe-search .checkbox-label{
   color: #9EA0A3;
   font-size: 1rem;
   user-select: none;
 }
 
-.in-pantry:focus{
+.recipe-search .in-pantry:focus{
   outline: none;
 }
 
-.in-pantry{
+.recipe-search .in-pantry{
 
 }
 
-.basic{
+.recipe-search .basic{
   font-family: "Raleway", sans-serif;
   font-size: 1rem;
 

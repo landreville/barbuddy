@@ -97,7 +97,7 @@ export default {
 }
 
 h2{
-  margin-left: 1rem;
+  margin: 0 0 0.5rem 1rem;
 }
 
 .add-btn > button{

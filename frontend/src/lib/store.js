@@ -44,7 +44,6 @@ export const store = {
         this.data.search = barbuddyStore.search;
       }
       if (barbuddyStore.pantryItems) {
-        console.log('Restoring pantry', barbuddyStore.pantryItems);
         this.data.pantryItems = barbuddyStore.pantryItems;
       }
     }
