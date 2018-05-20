@@ -15,21 +15,34 @@ const router = new Router({
       path: '/',
       name: 'recipes',
       component: recipes,
-      meta: { title: appTitle }
+      meta: { title: appTitle, breadcrumbs: [['Recipes', { name: 'recipes' }]] }
     },
     {
       path: '/recipes/:id',
       name: 'recipe',
       component: recipe,
       props: { default: true },
-      meta: { title: r => r.params.id }
+      meta: {
+        title: r => r.params.id,
+        breadcrumbs: [
+          ['Recipes', { name: 'recipes' }],
+          r => [r.params.id, { name: 'recipe', id: r.params.id }]
+        ]
+      }
     },
     {
       path: '/recipes/:id/edit',
       name: 'edit-recipe',
       component: editrecipe,
       props: { default: true },
-      meta: { title: r => r.params.id }
+      meta: {
+        title: r => r.params.id,
+        breadcrumbs: [
+          ['Recipes', { name: 'recipes' }],
+          r => [r.params.id, { name: 'recipe', id: r.params.id }],
+          r => [`Edit ${r.params.id}`, { name: 'edit-recipe', id: r.params.id }]
+        ]
+      }
     },
     {
       path: '/login',
@@ -43,7 +56,7 @@ const router = new Router({
       component: pantry,
       meta: { title: 'Pantry' }
     }
-  ],
+  ]
 });
 
 

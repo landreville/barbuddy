@@ -7,10 +7,13 @@
       </div>
       <div class="nav-container">
         <nav>
-          <div class="nav-item">
+          <div class="nav-item"
+               v-for="linkItem in breadcrumbs()"
+               :linkItem="linkItem"
+               :key="linkItem[0]">
             <router-link class="navlink"
-                         :class="{ active: ['recipes', 'recipe', 'edit-recipe'].indexOf($route.name) != -1}"
-                         :to="{ name: 'recipes' }">Recipes</router-link>
+                         :to="linkItem[1]">{{ linkItem[0] }}</router-link>
+
           </div>
         </nav>
       </div>
@@ -20,7 +23,25 @@
 <script>
 export default {
   name: 'app-header',
-  props: ['title']
+  props: ['title'],
+  methods: {
+    breadcrumbs() {
+      let links = [];
+      let bc = this.$route.meta.breadcrumbs;
+      if (!bc) {
+        return [];
+      }
+
+      for (let i = 0; i < bc.length; i++) {
+        let linkItem = bc[i];
+        if ({}.toString.call(linkItem) === '[object Function]') {
+          linkItem = linkItem(this.$route);
+        }
+        links.push(linkItem);
+      }
+      return links;
+    }
+  }
 };
 </script>
 
@@ -32,7 +53,6 @@ header{
 .header-title{
   margin: 0 auto;
   text-align: center;
-  /*height: 6rem;*/
   color: rgb(68, 68, 68);
 }
 
@@ -59,14 +79,22 @@ header{
 }
 
 nav{
-  margin: 0 auto;
-  max-width: 600px;
+  margin-left: 1rem;
   display: flex;
 }
 
 .nav-item{
   line-height: 1em;
+  margin: 0.5rem 0;
+}
+
+.nav-item::after{
+  content: "›";
   margin: 0.5rem 1rem;
+}
+
+.nav-item:last-child::after{
+  content: "";
 }
 
 .navlink{

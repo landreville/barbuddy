@@ -116,8 +116,6 @@
 
   .recipe-card {
     background-color: white;
-
-    box-shadow: 0 2px 4px rgba(180, 180, 180, 0.8);
   }
 
   .main-image {
