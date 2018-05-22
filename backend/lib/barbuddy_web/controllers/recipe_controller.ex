@@ -3,7 +3,6 @@ defmodule BarBuddyWeb.RecipeController do
   alias BarBuddyDB.Recipe
   alias BarBuddyDB.RecipeIngredient
   alias BarBuddyDB.Ingredient
-  alias BarBuddyDB.Substitute
   alias BarBuddy.Repo
   import Ecto.Query
 

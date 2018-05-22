@@ -1,6 +1,5 @@
 defmodule BarBuddyWeb.JsonView do
   use BarBuddyWeb, :view
-  alias BarBuddyDB.Recipe
 
   def render("data.json", %{data: data}) do
     %{"data" => data}
