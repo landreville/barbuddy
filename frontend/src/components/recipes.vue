@@ -1,30 +1,10 @@
 <template>
   <div class="recipes-wrapper">
     <div class="recipes">
-      <!-- TODO: Move recipe cards to their own component -->
-      <div class="card"
-           v-for="recipe in store.recipes"
-           :recipe="recipe"
-           :key="recipe.recipe_name">
-        <div class="card__banner">
-          <img class="main-image" :src="photoUrl(recipe)"/>
-        </div>
-        <div class="card__content">
-          <div class="card__title">
-            <h2 class="title">
-              <router-link class="title-link"
-                           :to="{ name: 'recipe', params: { id: recipe.recipe_name } }">
-                {{ recipe.recipe_name }}
-              </router-link>
-            </h2>
-          </div>
-          <div class="card__body">
-            <div class="description">
-              {{ recipe.description }}
-            </div>
-          </div>
-        </div>
-      </div>
+      <recipe-card
+        v-for="recipe in store.recipes"
+       :recipe="recipe"
+       :key="recipe.recipe_name"></recipe-card>
     </div>
   </div>
 </template>
@@ -42,71 +22,19 @@
   justify-content: center;
 }
 
-.card{
-  width: 320px;
-  max-width: 400px;
-  min-width: 120px;
-
-  margin: 2rem 1rem;
-}
-
-.card__banner{
-  height:200px;
-}
-
-.card__content{
-  padding: 1rem;
-}
-
-.main-image{
-  width: 100%;
-}
-
-.title{
-  font-family: "Josefin Slab", sans-serif;
-  text-align: center;
-
-  font-size: 1.5rem;
-  line-height: 2rem;
-
-  padding: 0;
-  margin: 0 0 0.5rem 0;
-
-  color: rgb(75, 75, 75);
-}
-
-.title-link{
-  color: rgb(68, 68, 68);
-}
-
-.title-link:hover{
-  text-decoration: underline;
-}
-
-.description{
-  line-height: 1.5rem;
-  color: rgb(120, 120, 120);
-  text-align: center;
-}
 </style>
 
 <script>
-import recipesearch from './recipe-search';
-import { ApiClient } from '../lib/apiclient';
+import recipeCard from './recipe-card';
 import { store } from '../lib/store';
 
 export default {
   name: 'recipes',
-  components: { 'recipe-search': recipesearch },
+  components: { 'recipe-card': recipeCard },
   data() {
     return {
       store: store.data
     };
-  },
-  methods: {
-    photoUrl(recipe) {
-      return ApiClient.recipeImageUrl(recipe);
-    }
   }
 };
 </script>
