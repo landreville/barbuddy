@@ -2,7 +2,7 @@ FROM elixir:1.6-alpine as builder
 
 ENV MIX_ENV=prod
 
-RUN apk add --no-cache build-base
+RUN apk add --no-cache build-base bash
 
 WORKDIR /app
 COPY . /app
@@ -17,7 +17,7 @@ RUN echo $(cat mix.exs| grep version: | head -n1 | awk -F: '{print $2}' | sed 's
 
 FROM alpine:3.7
 
-RUN apk add --no-cache ncurses-libs openssl
+RUN apk add --no-cache ncurses-libs openssl bash
 
 COPY --from=builder /app/target /app/.version /app/
 
