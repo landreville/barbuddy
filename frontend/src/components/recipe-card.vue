@@ -23,7 +23,7 @@
           </div>
           <div class="main-ing-item"
                v-for="mainIng in mainIngredients"
-               :key="mainIng"
+               :key="mainIng.ingredient_name"
                :mainIn="mainIng">
             {{ mainIng.ingredient_name }}
           </div>
@@ -59,24 +59,18 @@ export default {
   computed: {
     recipeIngredients() { return this.recipe.recipe_ingredients; },
     missingIngredients() {
-      console.log('missing ingredients');
       if (!this.pantryItems) {
-        console.log('No pantry items');
         return;
       }
 
       let missingIngredients = [];
       for (let i = 0; i < this.recipeIngredients.length; i++) {
         let recipeIngredient = this.recipeIngredients[i];
-        console.log(`Looking for ${recipeIngredient.ingredient_name}`);
         if (
           !recipeIngredient.optional && !recipeIngredient.garnish &&
           this.pantryItems.indexOf(recipeIngredient.ingredient_name) === -1
         ) {
-          console.log(`Missing ${recipeIngredient.ingredient_name}`);
           missingIngredients.push(recipeIngredient.ingredient_name);
-        } else {
-          console.log(`Found ${recipeIngredient.ingredient_name}`);
         }
       }
 

@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { appTitle } from '@/lib/constants';
+import { APP_TITLE } from '@/lib/constants';
 import { ApiClient } from './lib/apiclient';
 import { store } from './lib/store';
 import appheader from './components/app-header';
@@ -32,7 +32,7 @@ export default {
   },
   data() {
     return {
-      title: appTitle,
+      title: APP_TITLE,
       recipes: [],
     };
   },
