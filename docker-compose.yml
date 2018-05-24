@@ -1,0 +1,21 @@
+version: '3'
+services:
+  barbuddyapi:
+    build: backend/
+    image: barbuddyapi
+    container_name: barbuddyapi
+    depends_on:
+      - barbuddydb
+
+  barbuddydb:
+    build: database/
+    image: barbuddydb
+    container_name: barbuddydb
+
+
+  barbuddyfe:
+    build: frontend/
+    image: barbuddyfe
+    container_name: barbuddyfe
+    depends_on:
+      - barbuddyapi
