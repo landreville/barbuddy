@@ -4,6 +4,8 @@ services:
     build: backend/
     image: barbuddyapi
     container_name: barbuddyapi
+    tty: true
+    stdin_open: true
     depends_on:
       - barbuddydb
 
