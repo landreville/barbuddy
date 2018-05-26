@@ -78,7 +78,7 @@ export default {
     },
     mainIngredients() {
       let mainIngs = [];
-      for (let i = 0; i < this.recipeIngredients.length; i++) {
+      for (let i = 0; i < this.recipeIngredients.length && mainIngs.length < 3; i++) {
         let recipeIngredient = this.recipeIngredients[i];
         if (!recipeIngredient.garnish && !recipeIngredient.optional) {
           mainIngs.push(recipeIngredient);
