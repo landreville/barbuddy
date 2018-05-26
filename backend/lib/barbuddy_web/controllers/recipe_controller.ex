@@ -133,10 +133,18 @@ defmodule BarBuddyWeb.RecipeController do
 
     riq = from sri in subquery(subq),
       where: fragment("? - ?", sri.ingredient_count, sri.ingredient_matches)  <= 2,
-      select: %{recipe_name: sri.recipe_name, ingredient_matches: sri.ingredient_matches}
+      select: %{
+        recipe_name: sri.recipe_name,
+        ingredient_matches: sri.ingredient_matches,
+        ingredient_count: sri.ingredient_count
+      }
 
     join(query, :inner, [r], sri in subquery(riq), sri.recipe_name == r.recipe_name)
-    |> order_by([r, ri, sri], desc: sri.ingredient_matches, asc: r.recipe_name)
+    |> order_by(
+         [r, ri, sri],
+         asc: fragment("? - ?", sri.ingredient_count, sri.ingredient_matches),
+         asc: r.recipe_name
+       )
 
   end
 end
