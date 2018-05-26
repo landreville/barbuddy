@@ -2,7 +2,7 @@ version: '3'
 services:
   barbuddyapi:
     build: backend/
-    image: localhost:5000/barbuddyapi
+    image: localhost:5000/barbuddyapi:2
     container_name: barbuddyapi
     tty: true
     stdin_open: true
@@ -11,13 +11,12 @@ services:
 
   barbuddydb:
     build: database/
-    image: localhost:5000/barbuddydb
+    image: localhost:5000/barbuddydb:2
     container_name: barbuddydb
-
 
   barbuddyfe:
     build: frontend/
-    image: localhost:5000/barbuddyfe
+    image: localhost:5000/barbuddyfe:2
     container_name: barbuddyfe
     depends_on:
       - barbuddyapi

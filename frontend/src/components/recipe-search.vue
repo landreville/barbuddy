@@ -14,6 +14,8 @@
                      v-model="ingredients"
                      :options="ingredientOptions"
                      :multiple="true"
+                     deselectLabel=""
+                     selectLabel=""
                      placeholder="Ingredients..."
                      @search-change="change">
         </multiselect>

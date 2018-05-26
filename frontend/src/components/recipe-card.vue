@@ -47,6 +47,7 @@
 <script>
 import { ApiClient } from '../lib/apiclient';
 import { store } from '../lib/store';
+import { sortIngredients } from "../lib/util";
 
 export default {
   name: 'recipe-card',
@@ -57,7 +58,10 @@ export default {
     };
   },
   computed: {
-    recipeIngredients() { return this.recipe.recipe_ingredients; },
+    recipeIngredients() {
+      this.recipe.recipe_ingredients.sort(sortIngredients);
+      return this.recipe.recipe_ingredients;
+    },
     missingIngredients() {
       if (!this.pantryItems || (this.pantryItems && this.pantryItems.length === 0)) {
         return [];
