@@ -201,6 +201,11 @@ export default {
 
 .multiselect__tag{
   font-family: "Raleway", sans-serif;
+  background-color: rgb(92, 92, 92);
+}
+
+.multiselect__tag-icon::after{
+  color: rgb(192, 192, 192);
 }
 
 .multiselect__tags-wrap{

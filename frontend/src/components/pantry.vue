@@ -1,30 +1,19 @@
 <template>
     <div class="pantry">
-      <h2>Pantry Items</h2>
-      <div class="list">
-        <div class="list-item controls">
-          <div class="ingredient-select">
-            <select v-model="newPantryItem">
-              <option :value="null">-- Add Pantry Item --</option>
-              <option v-for="opt in ingredientOptions" :key="opt" :opt="opt">
-                {{ opt }}
-              </option>
-            </select>
-          </div>
-          <div class="add-btn">
-            <button @click="addIngredient">Add</button>
-          </div>
-        </div>
-
-        <div class="list-item"
-             v-for="ing in pantryItems" :key="ing" :ing="ing">
-          <div class="list-item__title">
-            {{ ing }}
-          </div>
-          <div class="remove-btn">
-            <button @click="removeIngredient(ing)">X</button>
-          </div>
-
+      <h2 class="pantry__title">Pantry Items</h2>
+      <div class="pantry__list">
+        <div class="pantry__list-item controls">
+          <multiselect class="pantry__select"
+                       v-model="pantryItems"
+                       :options="ingredientOptions"
+                       :multiple="true"
+                       :searchable="true"
+                       :close-on-select="false"
+                       deselectLabel=""
+                       selectLabel=""
+                       placeholder="Pantry Items..."
+                       @input="change">
+          </multiselect>
         </div>
       </div>
     </div>
@@ -42,28 +31,14 @@ export default {
   data() {
     return {
       pantryItems: store.data.pantryItems,
-      newPantryItem: null,
       ingredientOptions: []
     };
   },
   methods: {
-    addIngredient() {
-      for (let i = 0; i < store.data.pantryItems.length; i++) {
-        if (store.data.pantryItems[i] === this.newPantryItem) {
-          this.newPantryItem = null;
-          return;
-        }
-      }
-      if (this.newPantryItem) {
-        store.addPantryItem(this.newPantryItem);
-      }
-      this.newPantryItem = null;
-
+    change() {
+      store.data.pantryItems = this.pantryItems;
       this.$emit('changed', store.data.pantryItems);
-    },
-    removeIngredient(pantryItem) {
-      store.removePantryItem(pantryItem);
-      this.$emit('changed', store.data.pantryItems);
+      store.save();
     },
     fetchIngredients() {
       ApiClient.getIngredients().then(
@@ -76,15 +51,16 @@ export default {
 };
 </script>
 
-<style scoped>
-.list{
+// Not scoped so it will target the multiselect widget inner pieces
+<style>
+.pantry__list{
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.list-item{
+.pantry__list-item{
   background-color: #FFFFFF;
   width: 100%;
   max-width: 800px;
@@ -96,25 +72,42 @@ export default {
   border-bottom: 1px solid rgba(180, 180, 180, 0.5);
 }
 
-h2{
+.pantry__title{
   margin: 0 0 0.5rem 1rem;
 }
 
-.add-btn > button{
+
+.multiselect__tags{
   font-family: "Raleway", sans-serif;
-  font-size: 0.75rem;
-  padding: 0 0.25rem;
-  cursor: pointer;
-  width: 100%;
-  margin-left: 0.5rem;
+
+  border: 1px solid #a8a8a8;
 }
 
-.remove-btn > button{
+.multiselect__single{
+  padding-top: 0.25rem;
+  font-size: 1rem;
+  /*line-height: 1rem;*/
+  color: #9EA0A3;
+}
+
+.multiselect__select{
+  line-height: 1rem;
+}
+
+.multiselect__tag{
   font-family: "Raleway", sans-serif;
-  font-size: 0.5rem;
-  padding: 0 0rem;
-  cursor: pointer;
-  width: 100%;
-  margin-left: 0.5rem;
+  background-color: rgb(92, 92, 92);
+}
+
+.multiselect__tag-icon::after{
+  color: rgb(192, 192, 192);
+}
+
+.multiselect__tags-wrap{
+  line-height: 1rem;
+}
+
+.multiselect__content-wrapper{
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
 }
 </style>
