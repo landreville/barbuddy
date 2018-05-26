@@ -4,3 +4,5 @@ backend/deps/
 backend/_build/
 backend/config/prod.secret.exs
 .*\.env$
+database/backup.sql
+database/data.json
