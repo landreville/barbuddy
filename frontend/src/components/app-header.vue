@@ -16,14 +16,56 @@
 
           </div>
         </nav>
+        
+        <div class="auth-status">
+          <span class="auth-status__links" v-if="!loggedIn">
+            <a class="auth-status__link auth-status__login"
+               @click.prevent="login()">Login</a>
+            /
+            <a class="auth-status__link auth-status__signup"
+               @click.prevent="login()">Sign-Up</a>
+          </span>
+          <span class="auth-status__links" v-if="loggedIn">
+            <a class="auth-status__link auth-status__profile">{{ username }}</a>
+          </span>
+        </div>
+        
       </div>
     </header>
 </template>
 
 <script>
+import firebase from 'firebase';
+import firebaseui from 'firebaseui'
+import { firebaseConfig } from '../lib/config';
+
+
+
+
 export default {
   name: 'app-header',
   props: ['title'],
+  created() {
+    firebase.initializeApp(config);
+    firebase.auth().onAuthStateChanged(this.changeAuthState);
+  },
+  mounted() {
+    let uiConfig = {
+      signInSuccessUrl: '/success',
+        signInOptions: [
+          firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+          firebase.auth.EmailAuthProvider.PROVIDER_ID
+        ]
+    };
+    let ui = new firebaseui.auth.AuthUI(firebase.auth());
+    ui.start('#firebaseui-auth-container', uiConfig);
+  },
+  data() {
+    return {
+      username: '',
+      loggedIn: false
+    };
+  }
   methods: {
     breadcrumbs() {
       let links = [];
@@ -40,6 +82,41 @@ export default {
         links.push(linkItem);
       }
       return links;
+    },
+    changeAuthState(user) {
+      if (user) {
+        // User is signed in.
+        var displayName = user.displayName;
+        var email = user.email;
+        var emailVerified = user.emailVerified;
+        var photoURL = user.photoURL;
+        var uid = user.uid;
+        var phoneNumber = user.phoneNumber;
+        var providerData = user.providerData;
+        user.getIdToken().then(function(accessToken) {
+          this.username = user.displayName;
+          this.loggedIn = true;
+          console.log('Logged in.');
+        );
+      } else {
+        // User is signed out.
+        this.loggedIn = false;
+        this.username = '';
+      }
+    },
+    login() {
+      let provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider).then((result) => {
+        let token = result.credential.accessToken;
+        let user = result.user;
+        console.log('Logged in with Google Auth Provider.');
+      }).catch((error) => {
+        let errorCode = error.code;
+        let errorMessage = error.message;
+        let email = error.email;
+        let credential = error.credential;
+        console.log('Error signing in.', errorMessage);
+      });
     }
   }
 };
@@ -76,6 +153,9 @@ header{
 .nav-container{
   border-top: 3px double rgb(200, 200, 200);
   border-bottom: 3px double rgb(200, 200, 200);
+  
+  display: flex;
+  justify-items: space-between;
 }
 
 nav{
