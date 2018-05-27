@@ -65,7 +65,7 @@ export default {
       username: '',
       loggedIn: false
     };
-  }
+  },
   methods: {
     breadcrumbs() {
       let links = [];
@@ -93,11 +93,11 @@ export default {
         var uid = user.uid;
         var phoneNumber = user.phoneNumber;
         var providerData = user.providerData;
-        user.getIdToken().then(function(accessToken) {
+        user.getIdToken().then((accessToken) => {
           this.username = user.displayName;
           this.loggedIn = true;
           console.log('Logged in.');
-        );
+        });
       } else {
         // User is signed out.
         this.loggedIn = false;
