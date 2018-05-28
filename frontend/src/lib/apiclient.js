@@ -146,7 +146,12 @@ class ApiClientSingleton {
   }
 
   getRecipes(query) {
-    return this.api.get(this.recipeBaseUrl, query);
+    return this.api.get(this.recipeBaseUrl, query).then((data) => {
+      for(let i = 0; i < data.length; i++){
+        data[i].recipe_ingredients.sort(sortIngredients);
+      }
+      return data;
+    });
   }
 
   isLoggedIn() {

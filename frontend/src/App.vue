@@ -39,7 +39,6 @@ export default {
   methods: {
     fetchRecipes() {
       // Check if search object is empty ( I sure do like Javascript :S )
-
       if (Object.keys(store.data.search).length === 0 && store.data.search.constructor === Object) {
         ApiClient.getRecipes().then(data => store.setRecipes(data));
       } else {

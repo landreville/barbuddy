@@ -59,7 +59,6 @@ export default {
   },
   computed: {
     recipeIngredients() {
-      this.recipe.recipe_ingredients.sort(sortIngredients);
       return this.recipe.recipe_ingredients;
     },
     missingIngredients() {
