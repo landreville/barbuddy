@@ -41,13 +41,13 @@ defmodule BarBuddy.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
-      {:httpoison, "~> 1.0"},
+      {:httpoison, dependency: "~> 1.0", override: true},
       {:plug, "~> 1.0"},
       {:corsica, "~> 1.0"},
       {:poison, "~> 3.1"},
       {:fastimage, "~> 1.0.0-rc2"},
       {:distillery, "~> 1.5", runtime: false},
-      {:guardian, "~> 1.0"},
+      {:guardian, "~> 1.1.0", git: "https://github.com/ueberauth/guardian.git"},
       {:comeonin, "~> 4.0"},
       {:bcrypt_elixir, "~> 1.0"}
     ]

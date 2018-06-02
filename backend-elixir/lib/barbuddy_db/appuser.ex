@@ -7,7 +7,12 @@ defmodule BarBuddyDB.AppUser do
 
   schema "appuser" do
     field :user_id, :integer, primary_key: true
+    field :display_name, :string
     field :email, :string
+    field :email_verified, :boolean
+    field :photo_url, :string
+    field :google_uid, :string
+    field :provider_data, :map
     field :password, :string
     field :info, :map
     field :preferences, :map
@@ -26,8 +31,8 @@ defmodule BarBuddyDB.AppUser do
 
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :password])
-    |> validate_required([:email, :password])
+    |> cast(attrs, [:email, :email_verified, :photo_url, :google_uid, :provider_data])
+    |> validate_required([:email])
     |> put_pass_hash()
   end
 

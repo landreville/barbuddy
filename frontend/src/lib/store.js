@@ -3,7 +3,16 @@ export const store = {
   data: {
     recipes: [],
     search: {},
-    pantryItems: []
+    pantryItems: [],
+    accessToken: null
+  },
+  isLoggedIn() {
+    // TODO: check if access token is expired
+    return this.data.accessToken != null;
+  },
+  setAccessToken(accessToken) {
+    this.data.accessToken = accessToken;
+    return accessToken;
   },
   setRecipes(recipes) {
     this.data.recipes = recipes;

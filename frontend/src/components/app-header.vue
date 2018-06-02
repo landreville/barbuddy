@@ -16,7 +16,7 @@
 
           </div>
         </nav>
-        
+
         <div class="auth-status">
           <span class="auth-status__links" v-if="!loggedIn">
             <a class="auth-status__link auth-status__login"
@@ -29,33 +29,31 @@
             <a class="auth-status__link auth-status__profile">{{ username }}</a>
           </span>
         </div>
-        
+
       </div>
     </header>
 </template>
 
 <script>
 import firebase from 'firebase';
-import firebaseui from 'firebaseui'
+import firebaseui from 'firebaseui';
 import { firebaseConfig } from '../lib/config';
-
-
-
+import { store } from '../lib/store';
 
 export default {
   name: 'app-header',
   props: ['title'],
   created() {
-    firebase.initializeApp(config);
+    firebase.initializeApp(firebaseConfig);
     firebase.auth().onAuthStateChanged(this.changeAuthState);
   },
   mounted() {
     let uiConfig = {
       signInSuccessUrl: '/success',
-        signInOptions: [
-          firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-          firebase.auth.EmailAuthProvider.PROVIDER_ID
-        ]
+      signInOptions: [
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        firebase.auth.EmailAuthProvider.PROVIDER_ID
+      ]
     };
     let ui = new firebaseui.auth.AuthUI(firebase.auth());
     ui.start('#firebaseui-auth-container', uiConfig);
@@ -85,18 +83,18 @@ export default {
     },
     changeAuthState(user) {
       if (user) {
-        // User is signed in.
-        var displayName = user.displayName;
-        var email = user.email;
-        var emailVerified = user.emailVerified;
-        var photoURL = user.photoURL;
-        var uid = user.uid;
-        var phoneNumber = user.phoneNumber;
-        var providerData = user.providerData;
+        // // User is signed in.
+        // let displayName = user.displayName;
+        // let email = user.email;
+        // let emailVerified = user.emailVerified;
+        // let photoURL = user.photoURL;
+        // let uid = user.uid;
+        // let phoneNumber = user.phoneNumber;
+        // let providerData = user.providerData;
         user.getIdToken().then((accessToken) => {
+          store.setAccessToken(accessToken);
           this.username = user.displayName;
           this.loggedIn = true;
-          console.log('Logged in.');
         });
       } else {
         // User is signed out.
@@ -106,15 +104,11 @@ export default {
     },
     login() {
       let provider = new firebase.auth.GoogleAuthProvider();
-      firebase.auth().signInWithPopup(provider).then((result) => {
-        let token = result.credential.accessToken;
-        let user = result.user;
-        console.log('Logged in with Google Auth Provider.');
-      }).catch((error) => {
-        let errorCode = error.code;
+      firebase.auth().signInWithPopup(provider).then().catch((error) => {
+        // let errorCode = error.code;
         let errorMessage = error.message;
-        let email = error.email;
-        let credential = error.credential;
+        // let email = error.email;
+        // let credential = error.credential;
         console.log('Error signing in.', errorMessage);
       });
     }
@@ -153,9 +147,9 @@ header{
 .nav-container{
   border-top: 3px double rgb(200, 200, 200);
   border-bottom: 3px double rgb(200, 200, 200);
-  
+
   display: flex;
-  justify-items: space-between;
+  justify-content: space-between;
 }
 
 nav{
@@ -182,5 +176,9 @@ nav{
 }
 .navlink.active{
   /*text-decoration: underline;*/
+}
+
+.auth-status{
+  margin-right: 1rem;
 }
 </style>

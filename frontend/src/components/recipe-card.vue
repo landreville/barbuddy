@@ -47,7 +47,6 @@
 <script>
 import { ApiClient } from '../lib/apiclient';
 import { store } from '../lib/store';
-import { sortIngredients } from "../lib/util";
 
 export default {
   name: 'recipe-card',

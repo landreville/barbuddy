@@ -31,4 +31,4 @@ export function sortIngredients(a, b) {
   }
 
   return b.amount - a.amount;
-};
+}

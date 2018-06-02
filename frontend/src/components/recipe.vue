@@ -87,15 +87,22 @@
 
 <script>
 import { ApiClient } from '../lib/apiclient';
+// import { store } from '../lib/store';
 
 export default {
   props: ['id'],
   data() {
     return {
       recipe: {},
-      photoUrl: null,
-      loggedIn: ApiClient.isLoggedIn()
+      photoUrl: null
     };
+  },
+  computed: {
+    loggedIn() {
+      // TODO: get logged in status
+      return true;
+      // return store.isLoggedIn();
+    }
   },
   watch: {
     $route: 'fetchRecipe'

@@ -1,23 +1,18 @@
 import axios from 'axios';
-import { JWS } from './jwt';
 import { API_BASE_URL } from './constants';
-import { sortIngredients } from "./util";
+import { sortIngredients } from './util';
+import { store } from './store';
 
 // const BASE_URL = 'http://localhost:4000/';
 const BASE_URL = API_BASE_URL;
 const API_URL = `${BASE_URL}api/`;
 
 
-
-
-
 class AxiosProxy {
 
-  constructor(baseURL, apiClient) {
+  constructor(baseURL) {
     this.axios = axios.create({ baseURL });
-    this.apiClient = apiClient;
     this.jws = null;
-    this.jwsFromStorage();
   }
 
   get(url, query) {
@@ -41,21 +36,18 @@ class AxiosProxy {
       }
       getUrl = `${getUrl}?${params.toString()}`;
     }
-
-    return this.refresh().then(
-      () => this.axios.get(getUrl, this.axiosConfig()).then(resp => resp.data.data)
-    );
+    return this.axios.get(getUrl, this.axiosConfig()).then(resp => resp.data.data);
   }
 
   post(url, body, refresh) {
     if (refresh === false) {
       return this.axios.post(url, body, this.axiosConfig());
     }
-    return this.refresh().then(() => this.axios.post(url, body, this.axiosConfig()));
+    return this.axios.post(url, body, this.axiosConfig());
   }
 
   put(url, body) {
-    return this.refresh().then(() => this.axios.put(url, body, this.axiosConfig()));
+    return this.axios.put(url, body, this.axiosConfig());
   }
 
   axiosConfig() {
@@ -64,56 +56,18 @@ class AxiosProxy {
   }
 
   makeAuthHeader() {
-    if (this.jws) {
-      return { Authorization: `Bearer ${this.jws.accessToken}` };
+    if (store.data.accessToken) {
+      return { Authorization: `Bearer ${store.data.accessToken}` };
     }
     return {};
-  }
-
-  refresh() {
-    // Fake promise if refresh isn't necessary
-    let maybePromise = Promise.resolve(true);
-
-    this.jwsFromStorage();
-
-    if (this.jws && !this.jws.isExpired() && this.jws.shouldRefresh()) {
-      let refreshPromise = this.apiClient.refreshAuth(this.jws.accessToken);
-      if (refreshPromise) {
-        // Real promise this time
-        maybePromise = refreshPromise;
-      }
-    }
-
-    return maybePromise;
-  }
-
-  setAuthToken(token) {
-    this.jws = new JWS(token);
-    window.localStorage.setItem('jwt', token);
-  }
-
-  isLoggedIn() {
-    this.jwsFromStorage();
-    return this.jws && !this.jws.isExpired();
-  }
-
-  jwsFromStorage() {
-    if (!this.jws) {
-      let token = window.localStorage.getItem('jwt');
-      if (token) {
-        this.jws = new JWS(token);
-      }
-    }
   }
 }
 
 
 class ApiClientSingleton {
   constructor() {
-    this.api = new AxiosProxy(API_URL, this);
+    this.api = new AxiosProxy(API_URL);
 
-    this.loginUrl = 'auth/login';
-    this.refreshUrl = 'auth/refresh';
     this.recipeBaseUrl = 'recipes';
     this.ingredientsUrl = 'ingredients';
     this.catalogsUrl = 'catalogs';
@@ -147,25 +101,10 @@ class ApiClientSingleton {
 
   getRecipes(query) {
     return this.api.get(this.recipeBaseUrl, query).then((data) => {
-      for(let i = 0; i < data.length; i++){
+      for (let i = 0; i < data.length; i++) {
         data[i].recipe_ingredients.sort(sortIngredients);
       }
       return data;
-    });
-  }
-
-  isLoggedIn() {
-    return this.api.isLoggedIn();
-  }
-
-  login(email, password) {
-    return this.api.post(this.loginUrl, { email, password }).then((resp) => {
-      let data = resp.data.data;
-      if (data.success && data.token) {
-        this.api.setAuthToken(data.token);
-        return data.success;
-      }
-      return false;
     });
   }
 
@@ -192,20 +131,6 @@ class ApiClientSingleton {
     }
     return `${API_URL}${this.recipeBaseUrl}/${recipe.recipe_name}/image/main`;
   }
-
-  refreshAuth(token) {
-    return this.api.post(this.refreshUrl, { token }, false).then(
-      (resp) => {
-        let data = resp.data.data;
-        if (data.success && data.token) {
-          this.api.setAuthToken(data.token);
-          return data.success;
-        }
-        return false;
-      }
-    );
-  }
 }
 
 export const ApiClient = new ApiClientSingleton();
-

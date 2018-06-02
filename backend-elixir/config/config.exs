@@ -26,8 +26,11 @@ config :ecto, :json_library, Poison
 #config :poison, keys: :atoms!
 
 config :barbuddy, BarBuddy.Auth.Guardian,
-       issuer: "barBuddy",
-       secret_key: "a1403929JA8ZTa7b610QC+Bh444ga9eCPjL4lqhfLGvNKoR/BS5kDWOCgTitubqL"
+       issuer: "https://securetoken.google.com/bar-buddy-46f19",
+       allowed_algos: ["RS256", "HS512"],
+       secret_key: "a1403929JA8ZTa7b610QC+Bh444ga9eCPjL4lqhfLGvNKoR/BS5kDWOCgTitubqL",
+       secret_fetcher: BarBuddy.Auth.SecretFetcher,
+       token_module: BarBuddy.Auth.Token.Jwt
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

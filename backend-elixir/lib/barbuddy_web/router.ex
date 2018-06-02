@@ -33,6 +33,7 @@ defmodule BarBuddyWeb.Router do
     get "/recipes/:recipe_name/image/:image_type", RecipeImageController, :get
     get "/ingredients", IngredientController, :ingredients
     get "/ingredients/:view", IngredientController, :ingredients_view
+    get "/verify", AuthController, :verify
   end
 
   scope "/api", BarBuddyWeb do
