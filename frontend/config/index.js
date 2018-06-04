@@ -48,9 +48,9 @@ module.exports = {
       }
     ],
     proxyTable: {
-      '/api': { target: 'http://localhost:4000' },
-      '/images': { target: 'http://localhost:4000' },
-      '/js': { target: 'http://localhost:4000' }
+      '/api': { target: 'http://localhost:6543' },
+      '/images': { target: 'http://localhost:6543' },
+      '/js': { target: 'http://localhost:6543' }
     },
   },
 

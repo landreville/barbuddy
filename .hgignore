@@ -7,3 +7,7 @@ backend/config/prod.secret.exs
 database/backup.sql
 database/data.json
 .*firebaseAccountKey.json$
+.venv/
+backend-elixir/
+.*\.pyc$
+.*\.egg-info/
